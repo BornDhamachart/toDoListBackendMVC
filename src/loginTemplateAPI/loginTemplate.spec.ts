@@ -1,6 +1,6 @@
 import {
     getTest1
-  } from "./test1.resolver";
+  } from "./loginTemplate.resolver";
   
   describe("Shabudule", () => {
     // test("getTest1", async () => {

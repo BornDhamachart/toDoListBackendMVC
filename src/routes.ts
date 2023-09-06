@@ -1,18 +1,17 @@
 import {
-    getTest1,
-    // postTest1,
-  } from "./test1API";
+  registerHandler,
+  } from "./loginTemplateAPI";
   
   export const AppRoutes = [
   
     {
-      path: "/getTest1",
-      method: "get",
-      action: getTest1,
+      path: "/register",
+      method: "post",
+      action: registerHandler,
     },
     // {
     //   path: "/postTest1",
     //   method: "post",
-    //   action: postTest1,
+    //   action: register,
     // },
   ];
