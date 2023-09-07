@@ -54,7 +54,7 @@ export const login = async (args: ILogin) => {
     }
     bcrypt.compare(args.password, user[0].password, function (err, isLogin) {
       if (isLogin) {
-        const token = jwt.sign({ email: user[0].email }, secret, {
+        const token = jwt.sign({ email: user[0].email, fullname: user[0].fname }, secret, {
           expiresIn: "1hr",
         });
         return token;
