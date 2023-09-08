@@ -1,106 +1,27 @@
-This is template to initialize backend projects
-NodeJS + Express + Typescript
 
-Follow this step
---Install typescript
-yarn add express ts-node tsconfig-paths
-yarn add --dev typescript ts-node-dev @types/node @types/express
-npx tsc --init
-yarn add cors
-yarn add --dev @types/cors
+# Backend Template with JWT Authentication
 
---create .gitignore + add 
-node_modules
-.env
-yarn-error.log
+Welcome to the Backend Template project, a starter template for backend projects using Node.js, Express, TypeScript, and JWT-based authentication. This template provides the foundation for building secure and authenticated APIs with JWT (JSON Web Tokens).
 
---add in package.json
-{
-  "name": "workshop-backend",
-  "version": "1.0.0",
-  ...
-}
+## Tech Stack
 
---add script in package.json
+- **Node.js**: A JavaScript runtime for server-side development.
+- **Express**: A web application framework for Node.js.
+- **TypeScript**: A typed superset of JavaScript for enhanced development.
+- **JWT (JSON Web Tokens)**: A standard for securing and authenticating API requests.
 
-{
-  ...
-  "scripts": {
-    "dev": "ts-node-dev -r tsconfig-paths/register src/main.ts",
-    "start": "ts-node -r tsconfig-paths/register src/main"
-  },
-  ...
-}
+## Features
 
---create src/main.ts
+- User registration and login API with JWT authentication.
+- Middleware for JWT verification.
+- Sample routes for protected and public endpoints.
+- A secure and scalable foundation for building authenticated APIs.
 
---start project by yarn dev / yarn start
+## Setup Steps
 
-------------------------------------------------------------------------
+1. Clone or download this repository to your local development environment.
 
---install validate library
-yarn add io-ts io-ts-extra fp-ts
-
-
---install lib to connect to PostgresSQL
-yarn add pg
-yarn add --dev @types/pg
-
---install Prisma ORM
-yarn add --dev prisma
-yarn add @yarnpkg/pnpify
-npx prisma init --datasource-provider postgresql
-
---create .env and add environment variables
-DATABASE_URL="postgresql://postgres:password@localhost:5432/postgres?schema=xxxxxxx"
-(This may be any link up to database that we use)
-
---create prisma/schema index.prisma test.prisma(this name up to project)
-
---add script to package.json
-"scripts": {
-    ...
-    "prisma:merge": "cat prisma/schema/**.prisma > prisma/schema.prisma",
-    "prisma:format": "npx prisma format",
-    "prisma:migrate": "yarn pnpify migrate dev --name init --schema prisma/schema.prisma",
-    "prisma:generate": "yarn pnpify prisma generate --schema=prisma/schema.prisma"
-  }
-
-Explain 
-prisma:merge => Combine code from index.prisma and test1.prisma together and add to schema.prisma
-prisma:format => Format and check code
-prisma:migrate => Migrate new schema to database 
-prisma:generate => Generate all connection that build with prisma such as create connect etc.
-
-This flow should run in this order every time that we change schema
-
---install jest for unit testing
-yarn add --dev jest ts-jest @types/jest
-
---add file jest.config.ts
-
---add script to package.json
-  "scripts": {
-    ...
-    "test": "jest --verbose",
-    "test:xxxx": "jest -- src/xxxx"
-  }
-
-  the name is up to project
-
-  ------------------------------------------------------------------------
-
---add 
-routes.ts => this will be collection path of all API
-folder test1API
--resolver.ts => start with this, this file will be the one to connect to database via prisma
--handler.ts => this will check codec of input and mange response with/without error
--interface.ts => declare type
--spec.ts => test each API response
-
-
-If clone this project to use pls change these things
-1.Schema at test.prisma => change file name and add schema detail inside
-2.in .env => change DATABASE_URL to your URL
-3.Package.json => change "test:xxxxx": "jest -- src/xxxxx" to your project name this will ticker wile .spec.ts in src folder
-4.Start with resolver file write code to connect db then interface to mange input then handler then route.ts and lastly spec.ts to test
+2. Install the required dependencies using your package manager (e.g., npm or yarn):
+   ```shell
+   npm install # or yarn install
+   ```
