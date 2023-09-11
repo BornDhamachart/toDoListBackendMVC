@@ -13,7 +13,7 @@ export const register = (args: IRegister) => {
     args.password,
     saltRounds,
     function (err: any, hashPassword: any) {
-      prisma.loginTemplate.create({
+      prisma.users.create({
         data: {
           email: args.email,
           password: hashPassword,
@@ -29,7 +29,7 @@ export const registerNew = async (args: IRegister) => {
   try {
     const hashPassword = await bcrypt.hash(args.password, saltRounds);
 
-    await prisma.loginTemplate.create({
+    await prisma.users.create({
       data: {
         email: args.email,
         password: hashPassword,
@@ -44,17 +44,17 @@ export const registerNew = async (args: IRegister) => {
 
 export const login = async (args: ILogin) => {
   try {
-    const user = await prisma.loginTemplate.findUnique({
+    const user = await prisma.users.findMany({
       where: {
         email: args.email,
       },
     });
-    if (user.length === 0) {
+    if (user?.length === 0) {
       throw new Error("User not found");
     }
-    bcrypt.compare(args.password, user[0].password, function (err, isLogin) {
+    bcrypt.compare(args.password, user[0]?.password, function (err, isLogin) {
       if (isLogin) {
-        const token = jwt.sign({ email: user[0].email, fullname: user[0].fname }, secret, {
+        const token = jwt.sign({ email: user[0]?.email, fullname: user[0]?.fname }, secret, {
           expiresIn: "1hr",
         });
         return token;
