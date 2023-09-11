@@ -1,9 +1,72 @@
 model Users {
-  id                Int          @id @default(autoincrement())
-  email             String       @unique
-  password          String
-  fname             String  
-  lname             String 
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  fname     String
+  lname     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  groups    Group[]
+}
+
+model Group {
+  id          Int      @id @default(autoincrement())
+  title       String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      Int
+  user        Users    @relation(fields: [userId], references: [id])
+  tasks       Task[]
+}
+
+model Task {
+  id          Int           @id @default(autoincrement())
+  title       String?
+  description String?
+  dueDate     DateTime?
+  completed   Boolean       @default(false)
+  priority    TaskPriority?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  groupId     Int
+  group       Group         @relation(fields: [groupId], references: [id])
+  labels      Label[]
+  subTasks    Subtask[]
+  pictures    Picture[]
+}
+
+model Label {
+  id        Int      @id @default(autoincrement())
+  name      String
+  color     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tasks     Task[]
+}
+
+model Subtask {
+  id        Int      @id @default(autoincrement())
+  title     String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  taskId    Int
+  task      Task     @relation(fields: [taskId], references: [id])
+}
+
+model Picture {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  data      Bytes
+  taskId    Int
+  task      Task     @relation(fields: [taskId], references: [id])
+}
+
+enum TaskPriority {
+  Critical
+  High
+  Medium
+  Low
 }
