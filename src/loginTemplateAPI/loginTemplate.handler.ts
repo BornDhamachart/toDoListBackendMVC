@@ -7,7 +7,7 @@ import {
 import {
   register,
   login,
-  authentication
+  authentication,
 } from "./loginTemplate.resolver";
 
 export const registerHandler = async (
@@ -19,7 +19,7 @@ export const registerHandler = async (
     if (registerCodec.decode(args)._tag === "Right") {
       try {
         const result = await register(args);
-        res.status(200).json({status : "ok", result : result});
+        res.status(200).json({status : "ok"});
       } catch (e) {
         res.status(500).json({ error: String(e) });
       }
@@ -34,7 +34,7 @@ export const loginHandler = async (req: Request, res: Response) => {
   if (loginCodec.decode(args)._tag === "Right") {
     try {
       const result = await login(args);
-      res.status(200).json({ status: "ok", result: result });
+      res.status(200).json({ status: "ok", token : result});
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -44,16 +44,16 @@ export const loginHandler = async (req: Request, res: Response) => {
 };
 
 export const authenticationHandler = async (req: Request, res: Response) => {
-  const args = req?.body;
+  const authHeader = req?.headers['authorization'];
 
-  if (authenticationCodec.decode(args)._tag === "Right") {
+  if (authHeader && authHeader.startsWith('Bearer ')){
     try {
-      const result = await authentication(args);
+      const result = await authentication(authHeader);
       res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
   } else {
-    res.status(500).json({ error: "Error invalid codec" });
+    res.status(500).json({ error: "Invalid or missing Authorization header" });
   }
 };
