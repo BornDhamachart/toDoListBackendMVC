@@ -7,12 +7,13 @@ model Users {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   groups    Group[]
+  labels    Label[]
 }
 
 model Group {
   id          Int      @id @default(autoincrement())
-  title       String?
-  description String?
+  title       String
+  description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   userId      Int
@@ -22,8 +23,8 @@ model Group {
 
 model Task {
   id          Int           @id @default(autoincrement())
-  title       String?
-  description String?
+  title       String
+  description String
   dueDate     DateTime?
   completed   Boolean       @default(false)
   priority    TaskPriority?
@@ -33,7 +34,6 @@ model Task {
   group       Group         @relation(fields: [groupId], references: [id])
   labels      Label[]
   subTasks    Subtask[]
-  pictures    Picture[]
 }
 
 model Label {
@@ -43,23 +43,17 @@ model Label {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tasks     Task[]
+  userId      Int
+  user        Users    @relation(fields: [userId], references: [id])
 }
 
 model Subtask {
   id        Int      @id @default(autoincrement())
   title     String
+  description String
   completed Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  taskId    Int
-  task      Task     @relation(fields: [taskId], references: [id])
-}
-
-model Picture {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  data      Bytes
   taskId    Int
   task      Task     @relation(fields: [taskId], references: [id])
 }
@@ -70,3 +64,10 @@ enum TaskPriority {
   Medium
   Low
 }
+
+// model Picture {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   data      Bytes
+// }

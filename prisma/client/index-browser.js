@@ -143,23 +143,17 @@ exports.Prisma.LabelScalarFieldEnum = {
   name: 'name',
   color: 'color',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 };
 
 exports.Prisma.SubtaskScalarFieldEnum = {
   id: 'id',
   title: 'title',
+  description: 'description',
   completed: 'completed',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  taskId: 'taskId'
-};
-
-exports.Prisma.PictureScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  data: 'data',
   taskId: 'taskId'
 };
 
@@ -189,8 +183,7 @@ exports.Prisma.ModelName = {
   Group: 'Group',
   Task: 'Task',
   Label: 'Label',
-  Subtask: 'Subtask',
-  Picture: 'Picture'
+  Subtask: 'Subtask'
 };
 
 /**

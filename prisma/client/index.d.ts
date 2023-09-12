@@ -38,11 +38,6 @@ export type Label = $Result.DefaultSelection<Prisma.$LabelPayload>
  * 
  */
 export type Subtask = $Result.DefaultSelection<Prisma.$SubtaskPayload>
-/**
- * Model Picture
- * 
- */
-export type Picture = $Result.DefaultSelection<Prisma.$PicturePayload>
 
 /**
  * Enums
@@ -234,16 +229,6 @@ export class PrismaClient<
     * ```
     */
   get subtask(): Prisma.SubtaskDelegate<ExtArgs>;
-
-  /**
-   * `prisma.picture`: Exposes CRUD operations for the **Picture** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Pictures
-    * const pictures = await prisma.picture.findMany()
-    * ```
-    */
-  get picture(): Prisma.PictureDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -718,8 +703,7 @@ export namespace Prisma {
     Group: 'Group',
     Task: 'Task',
     Label: 'Label',
-    Subtask: 'Subtask',
-    Picture: 'Picture'
+    Subtask: 'Subtask'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -736,7 +720,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'users' | 'group' | 'task' | 'label' | 'subtask' | 'picture'
+      modelProps: 'users' | 'group' | 'task' | 'label' | 'subtask'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1070,72 +1054,6 @@ export namespace Prisma {
           }
         }
       }
-      Picture: {
-        payload: Prisma.$PicturePayload<ExtArgs>
-        fields: Prisma.PictureFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.PictureFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$PicturePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.PictureFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$PicturePayload>
-          }
-          findFirst: {
-            args: Prisma.PictureFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$PicturePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.PictureFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$PicturePayload>
-          }
-          findMany: {
-            args: Prisma.PictureFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$PicturePayload>[]
-          }
-          create: {
-            args: Prisma.PictureCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$PicturePayload>
-          }
-          createMany: {
-            args: Prisma.PictureCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          delete: {
-            args: Prisma.PictureDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$PicturePayload>
-          }
-          update: {
-            args: Prisma.PictureUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$PicturePayload>
-          }
-          deleteMany: {
-            args: Prisma.PictureDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.PictureUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.PictureUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$PicturePayload>
-          }
-          aggregate: {
-            args: Prisma.PictureAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregatePicture>
-          }
-          groupBy: {
-            args: Prisma.PictureGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<PictureGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.PictureCountArgs<ExtArgs>,
-            result: $Utils.Optional<PictureCountAggregateOutputType> | number
-          }
-        }
-      }
     }
   } & {
     other: {
@@ -1290,10 +1208,12 @@ export namespace Prisma {
 
   export type UsersCountOutputType = {
     groups: number
+    labels: number
   }
 
   export type UsersCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     groups?: boolean | UsersCountOutputTypeCountGroupsArgs
+    labels?: boolean | UsersCountOutputTypeCountLabelsArgs
   }
 
   // Custom InputTypes
@@ -1314,6 +1234,14 @@ export namespace Prisma {
    */
   export type UsersCountOutputTypeCountGroupsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: GroupWhereInput
+  }
+
+
+  /**
+   * UsersCountOutputType without action
+   */
+  export type UsersCountOutputTypeCountLabelsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: LabelWhereInput
   }
 
 
@@ -1359,13 +1287,11 @@ export namespace Prisma {
   export type TaskCountOutputType = {
     labels: number
     subTasks: number
-    pictures: number
   }
 
   export type TaskCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     labels?: boolean | TaskCountOutputTypeCountLabelsArgs
     subTasks?: boolean | TaskCountOutputTypeCountSubTasksArgs
-    pictures?: boolean | TaskCountOutputTypeCountPicturesArgs
   }
 
   // Custom InputTypes
@@ -1394,14 +1320,6 @@ export namespace Prisma {
    */
   export type TaskCountOutputTypeCountSubTasksArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: SubtaskWhereInput
-  }
-
-
-  /**
-   * TaskCountOutputType without action
-   */
-  export type TaskCountOutputTypeCountPicturesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: PictureWhereInput
   }
 
 
@@ -1659,6 +1577,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     groups?: boolean | Users$groupsArgs<ExtArgs>
+    labels?: boolean | Users$labelsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["users"]>
 
@@ -1674,6 +1593,7 @@ export namespace Prisma {
 
   export type UsersInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     groups?: boolean | Users$groupsArgs<ExtArgs>
+    labels?: boolean | Users$labelsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -1682,6 +1602,7 @@ export namespace Prisma {
     name: "Users"
     objects: {
       groups: Prisma.$GroupPayload<ExtArgs>[]
+      labels: Prisma.$LabelPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetResult<{
       id: number
@@ -2058,6 +1979,8 @@ export namespace Prisma {
 
     groups<T extends Users$groupsArgs<ExtArgs> = {}>(args?: Subset<T, Users$groupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, 'findMany'> | Null>;
 
+    labels<T extends Users$labelsArgs<ExtArgs> = {}>(args?: Subset<T, Users$labelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LabelPayload<ExtArgs>, T, 'findMany'> | Null>;
+
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2426,6 +2349,27 @@ export namespace Prisma {
 
 
   /**
+   * Users.labels
+   */
+  export type Users$labelsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Label
+     */
+    select?: LabelSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: LabelInclude<ExtArgs> | null
+    where?: LabelWhereInput
+    orderBy?: LabelOrderByWithRelationInput | LabelOrderByWithRelationInput[]
+    cursor?: LabelWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LabelScalarFieldEnum | LabelScalarFieldEnum[]
+  }
+
+
+  /**
    * Users without action
    */
   export type UsersDefaultArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -2618,8 +2562,8 @@ export namespace Prisma {
 
   export type GroupGroupByOutputType = {
     id: number
-    title: string | null
-    description: string | null
+    title: string
+    description: string
     createdAt: Date
     updatedAt: Date
     userId: number
@@ -2680,8 +2624,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetResult<{
       id: number
-      title: string | null
-      description: string | null
+      title: string
+      description: string
       createdAt: Date
       updatedAt: Date
       userId: number
@@ -3631,8 +3575,8 @@ export namespace Prisma {
 
   export type TaskGroupByOutputType = {
     id: number
-    title: string | null
-    description: string | null
+    title: string
+    description: string
     dueDate: Date | null
     completed: boolean
     priority: $Enums.TaskPriority | null
@@ -3673,7 +3617,6 @@ export namespace Prisma {
     group?: boolean | GroupDefaultArgs<ExtArgs>
     labels?: boolean | Task$labelsArgs<ExtArgs>
     subTasks?: boolean | Task$subTasksArgs<ExtArgs>
-    pictures?: boolean | Task$picturesArgs<ExtArgs>
     _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
@@ -3693,7 +3636,6 @@ export namespace Prisma {
     group?: boolean | GroupDefaultArgs<ExtArgs>
     labels?: boolean | Task$labelsArgs<ExtArgs>
     subTasks?: boolean | Task$subTasksArgs<ExtArgs>
-    pictures?: boolean | Task$picturesArgs<ExtArgs>
     _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -3704,12 +3646,11 @@ export namespace Prisma {
       group: Prisma.$GroupPayload<ExtArgs>
       labels: Prisma.$LabelPayload<ExtArgs>[]
       subTasks: Prisma.$SubtaskPayload<ExtArgs>[]
-      pictures: Prisma.$PicturePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetResult<{
       id: number
-      title: string | null
-      description: string | null
+      title: string
+      description: string
       dueDate: Date | null
       completed: boolean
       priority: $Enums.TaskPriority | null
@@ -4086,8 +4027,6 @@ export namespace Prisma {
     labels<T extends Task$labelsArgs<ExtArgs> = {}>(args?: Subset<T, Task$labelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LabelPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     subTasks<T extends Task$subTasksArgs<ExtArgs> = {}>(args?: Subset<T, Task$subTasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubtaskPayload<ExtArgs>, T, 'findMany'> | Null>;
-
-    pictures<T extends Task$picturesArgs<ExtArgs> = {}>(args?: Subset<T, Task$picturesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PicturePayload<ExtArgs>, T, 'findMany'> | Null>;
 
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4480,27 +4419,6 @@ export namespace Prisma {
 
 
   /**
-   * Task.pictures
-   */
-  export type Task$picturesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-    where?: PictureWhereInput
-    orderBy?: PictureOrderByWithRelationInput | PictureOrderByWithRelationInput[]
-    cursor?: PictureWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PictureScalarFieldEnum | PictureScalarFieldEnum[]
-  }
-
-
-  /**
    * Task without action
    */
   export type TaskDefaultArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -4530,10 +4448,12 @@ export namespace Prisma {
 
   export type LabelAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
   }
 
   export type LabelSumAggregateOutputType = {
     id: number | null
+    userId: number | null
   }
 
   export type LabelMinAggregateOutputType = {
@@ -4542,6 +4462,7 @@ export namespace Prisma {
     color: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    userId: number | null
   }
 
   export type LabelMaxAggregateOutputType = {
@@ -4550,6 +4471,7 @@ export namespace Prisma {
     color: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    userId: number | null
   }
 
   export type LabelCountAggregateOutputType = {
@@ -4558,16 +4480,19 @@ export namespace Prisma {
     color: number
     createdAt: number
     updatedAt: number
+    userId: number
     _all: number
   }
 
 
   export type LabelAvgAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type LabelSumAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type LabelMinAggregateInputType = {
@@ -4576,6 +4501,7 @@ export namespace Prisma {
     color?: true
     createdAt?: true
     updatedAt?: true
+    userId?: true
   }
 
   export type LabelMaxAggregateInputType = {
@@ -4584,6 +4510,7 @@ export namespace Prisma {
     color?: true
     createdAt?: true
     updatedAt?: true
+    userId?: true
   }
 
   export type LabelCountAggregateInputType = {
@@ -4592,6 +4519,7 @@ export namespace Prisma {
     color?: true
     createdAt?: true
     updatedAt?: true
+    userId?: true
     _all?: true
   }
 
@@ -4687,6 +4615,7 @@ export namespace Prisma {
     color: string
     createdAt: Date
     updatedAt: Date
+    userId: number
     _count: LabelCountAggregateOutputType | null
     _avg: LabelAvgAggregateOutputType | null
     _sum: LabelSumAggregateOutputType | null
@@ -4714,7 +4643,9 @@ export namespace Prisma {
     color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    userId?: boolean
     tasks?: boolean | Label$tasksArgs<ExtArgs>
+    user?: boolean | UsersDefaultArgs<ExtArgs>
     _count?: boolean | LabelCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["label"]>
 
@@ -4724,10 +4655,12 @@ export namespace Prisma {
     color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    userId?: boolean
   }
 
   export type LabelInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     tasks?: boolean | Label$tasksArgs<ExtArgs>
+    user?: boolean | UsersDefaultArgs<ExtArgs>
     _count?: boolean | LabelCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -4736,6 +4669,7 @@ export namespace Prisma {
     name: "Label"
     objects: {
       tasks: Prisma.$TaskPayload<ExtArgs>[]
+      user: Prisma.$UsersPayload<ExtArgs>
     }
     scalars: $Extensions.GetResult<{
       id: number
@@ -4743,6 +4677,7 @@ export namespace Prisma {
       color: string
       createdAt: Date
       updatedAt: Date
+      userId: number
     }, ExtArgs["result"]["label"]>
     composites: {}
   }
@@ -5110,6 +5045,8 @@ export namespace Prisma {
 
     tasks<T extends Label$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Label$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, 'findMany'> | Null>;
 
+    user<T extends UsersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsersDefaultArgs<ExtArgs>>): Prisma__UsersClient<$Result.GetResult<Prisma.$UsersPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5143,6 +5080,7 @@ export namespace Prisma {
     readonly color: FieldRef<"Label", 'String'>
     readonly createdAt: FieldRef<"Label", 'DateTime'>
     readonly updatedAt: FieldRef<"Label", 'DateTime'>
+    readonly userId: FieldRef<"Label", 'Int'>
   }
     
 
@@ -5516,6 +5454,7 @@ export namespace Prisma {
   export type SubtaskMinAggregateOutputType = {
     id: number | null
     title: string | null
+    description: string | null
     completed: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5525,6 +5464,7 @@ export namespace Prisma {
   export type SubtaskMaxAggregateOutputType = {
     id: number | null
     title: string | null
+    description: string | null
     completed: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5534,6 +5474,7 @@ export namespace Prisma {
   export type SubtaskCountAggregateOutputType = {
     id: number
     title: number
+    description: number
     completed: number
     createdAt: number
     updatedAt: number
@@ -5555,6 +5496,7 @@ export namespace Prisma {
   export type SubtaskMinAggregateInputType = {
     id?: true
     title?: true
+    description?: true
     completed?: true
     createdAt?: true
     updatedAt?: true
@@ -5564,6 +5506,7 @@ export namespace Prisma {
   export type SubtaskMaxAggregateInputType = {
     id?: true
     title?: true
+    description?: true
     completed?: true
     createdAt?: true
     updatedAt?: true
@@ -5573,6 +5516,7 @@ export namespace Prisma {
   export type SubtaskCountAggregateInputType = {
     id?: true
     title?: true
+    description?: true
     completed?: true
     createdAt?: true
     updatedAt?: true
@@ -5669,6 +5613,7 @@ export namespace Prisma {
   export type SubtaskGroupByOutputType = {
     id: number
     title: string
+    description: string
     completed: boolean
     createdAt: Date
     updatedAt: Date
@@ -5697,6 +5642,7 @@ export namespace Prisma {
   export type SubtaskSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    description?: boolean
     completed?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5707,6 +5653,7 @@ export namespace Prisma {
   export type SubtaskSelectScalar = {
     id?: boolean
     title?: boolean
+    description?: boolean
     completed?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5726,6 +5673,7 @@ export namespace Prisma {
     scalars: $Extensions.GetResult<{
       id: number
       title: string
+      description: string
       completed: boolean
       createdAt: Date
       updatedAt: Date
@@ -6127,6 +6075,7 @@ export namespace Prisma {
   interface SubtaskFieldRefs {
     readonly id: FieldRef<"Subtask", 'Int'>
     readonly title: FieldRef<"Subtask", 'String'>
+    readonly description: FieldRef<"Subtask", 'String'>
     readonly completed: FieldRef<"Subtask", 'Boolean'>
     readonly createdAt: FieldRef<"Subtask", 'DateTime'>
     readonly updatedAt: FieldRef<"Subtask", 'DateTime'>
@@ -6459,962 +6408,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Picture
-   */
-
-  export type AggregatePicture = {
-    _count: PictureCountAggregateOutputType | null
-    _avg: PictureAvgAggregateOutputType | null
-    _sum: PictureSumAggregateOutputType | null
-    _min: PictureMinAggregateOutputType | null
-    _max: PictureMaxAggregateOutputType | null
-  }
-
-  export type PictureAvgAggregateOutputType = {
-    id: number | null
-    taskId: number | null
-  }
-
-  export type PictureSumAggregateOutputType = {
-    id: number | null
-    taskId: number | null
-  }
-
-  export type PictureMinAggregateOutputType = {
-    id: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    data: Buffer | null
-    taskId: number | null
-  }
-
-  export type PictureMaxAggregateOutputType = {
-    id: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    data: Buffer | null
-    taskId: number | null
-  }
-
-  export type PictureCountAggregateOutputType = {
-    id: number
-    createdAt: number
-    updatedAt: number
-    data: number
-    taskId: number
-    _all: number
-  }
-
-
-  export type PictureAvgAggregateInputType = {
-    id?: true
-    taskId?: true
-  }
-
-  export type PictureSumAggregateInputType = {
-    id?: true
-    taskId?: true
-  }
-
-  export type PictureMinAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
-    data?: true
-    taskId?: true
-  }
-
-  export type PictureMaxAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
-    data?: true
-    taskId?: true
-  }
-
-  export type PictureCountAggregateInputType = {
-    id?: true
-    createdAt?: true
-    updatedAt?: true
-    data?: true
-    taskId?: true
-    _all?: true
-  }
-
-  export type PictureAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Picture to aggregate.
-     */
-    where?: PictureWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Pictures to fetch.
-     */
-    orderBy?: PictureOrderByWithRelationInput | PictureOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: PictureWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Pictures from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Pictures.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Pictures
-    **/
-    _count?: true | PictureCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: PictureAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: PictureSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: PictureMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: PictureMaxAggregateInputType
-  }
-
-  export type GetPictureAggregateType<T extends PictureAggregateArgs> = {
-        [P in keyof T & keyof AggregatePicture]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregatePicture[P]>
-      : GetScalarType<T[P], AggregatePicture[P]>
-  }
-
-
-
-
-  export type PictureGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: PictureWhereInput
-    orderBy?: PictureOrderByWithAggregationInput | PictureOrderByWithAggregationInput[]
-    by: PictureScalarFieldEnum[] | PictureScalarFieldEnum
-    having?: PictureScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: PictureCountAggregateInputType | true
-    _avg?: PictureAvgAggregateInputType
-    _sum?: PictureSumAggregateInputType
-    _min?: PictureMinAggregateInputType
-    _max?: PictureMaxAggregateInputType
-  }
-
-  export type PictureGroupByOutputType = {
-    id: number
-    createdAt: Date
-    updatedAt: Date
-    data: Buffer
-    taskId: number
-    _count: PictureCountAggregateOutputType | null
-    _avg: PictureAvgAggregateOutputType | null
-    _sum: PictureSumAggregateOutputType | null
-    _min: PictureMinAggregateOutputType | null
-    _max: PictureMaxAggregateOutputType | null
-  }
-
-  type GetPictureGroupByPayload<T extends PictureGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<PictureGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof PictureGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], PictureGroupByOutputType[P]>
-            : GetScalarType<T[P], PictureGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type PictureSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    data?: boolean
-    taskId?: boolean
-    task?: boolean | TaskDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["picture"]>
-
-  export type PictureSelectScalar = {
-    id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    data?: boolean
-    taskId?: boolean
-  }
-
-  export type PictureInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    task?: boolean | TaskDefaultArgs<ExtArgs>
-  }
-
-
-  export type $PicturePayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    name: "Picture"
-    objects: {
-      task: Prisma.$TaskPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetResult<{
-      id: number
-      createdAt: Date
-      updatedAt: Date
-      data: Buffer
-      taskId: number
-    }, ExtArgs["result"]["picture"]>
-    composites: {}
-  }
-
-
-  type PictureGetPayload<S extends boolean | null | undefined | PictureDefaultArgs> = $Result.GetResult<Prisma.$PicturePayload, S>
-
-  type PictureCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
-    Omit<PictureFindManyArgs, 'select' | 'include'> & {
-      select?: PictureCountAggregateInputType | true
-    }
-
-  export interface PictureDelegate<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Picture'], meta: { name: 'Picture' } }
-    /**
-     * Find zero or one Picture that matches the filter.
-     * @param {PictureFindUniqueArgs} args - Arguments to find a Picture
-     * @example
-     * // Get one Picture
-     * const picture = await prisma.picture.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends PictureFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, PictureFindUniqueArgs<ExtArgs>>
-    ): Prisma__PictureClient<$Result.GetResult<Prisma.$PicturePayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
-
-    /**
-     * Find one Picture that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
-     * @param {PictureFindUniqueOrThrowArgs} args - Arguments to find a Picture
-     * @example
-     * // Get one Picture
-     * const picture = await prisma.picture.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends PictureFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, PictureFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__PictureClient<$Result.GetResult<Prisma.$PicturePayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find the first Picture that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PictureFindFirstArgs} args - Arguments to find a Picture
-     * @example
-     * // Get one Picture
-     * const picture = await prisma.picture.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends PictureFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, PictureFindFirstArgs<ExtArgs>>
-    ): Prisma__PictureClient<$Result.GetResult<Prisma.$PicturePayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
-
-    /**
-     * Find the first Picture that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PictureFindFirstOrThrowArgs} args - Arguments to find a Picture
-     * @example
-     * // Get one Picture
-     * const picture = await prisma.picture.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends PictureFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, PictureFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__PictureClient<$Result.GetResult<Prisma.$PicturePayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find zero or more Pictures that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PictureFindManyArgs=} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Pictures
-     * const pictures = await prisma.picture.findMany()
-     * 
-     * // Get first 10 Pictures
-     * const pictures = await prisma.picture.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const pictureWithIdOnly = await prisma.picture.findMany({ select: { id: true } })
-     * 
-    **/
-    findMany<T extends PictureFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, PictureFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PicturePayload<ExtArgs>, T, 'findMany'>>
-
-    /**
-     * Create a Picture.
-     * @param {PictureCreateArgs} args - Arguments to create a Picture.
-     * @example
-     * // Create one Picture
-     * const Picture = await prisma.picture.create({
-     *   data: {
-     *     // ... data to create a Picture
-     *   }
-     * })
-     * 
-    **/
-    create<T extends PictureCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, PictureCreateArgs<ExtArgs>>
-    ): Prisma__PictureClient<$Result.GetResult<Prisma.$PicturePayload<ExtArgs>, T, 'create'>, never, ExtArgs>
-
-    /**
-     * Create many Pictures.
-     *     @param {PictureCreateManyArgs} args - Arguments to create many Pictures.
-     *     @example
-     *     // Create many Pictures
-     *     const picture = await prisma.picture.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
-     *     
-    **/
-    createMany<T extends PictureCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, PictureCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Picture.
-     * @param {PictureDeleteArgs} args - Arguments to delete one Picture.
-     * @example
-     * // Delete one Picture
-     * const Picture = await prisma.picture.delete({
-     *   where: {
-     *     // ... filter to delete one Picture
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends PictureDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, PictureDeleteArgs<ExtArgs>>
-    ): Prisma__PictureClient<$Result.GetResult<Prisma.$PicturePayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
-
-    /**
-     * Update one Picture.
-     * @param {PictureUpdateArgs} args - Arguments to update one Picture.
-     * @example
-     * // Update one Picture
-     * const picture = await prisma.picture.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends PictureUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, PictureUpdateArgs<ExtArgs>>
-    ): Prisma__PictureClient<$Result.GetResult<Prisma.$PicturePayload<ExtArgs>, T, 'update'>, never, ExtArgs>
-
-    /**
-     * Delete zero or more Pictures.
-     * @param {PictureDeleteManyArgs} args - Arguments to filter Pictures to delete.
-     * @example
-     * // Delete a few Pictures
-     * const { count } = await prisma.picture.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends PictureDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, PictureDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Pictures.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PictureUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Pictures
-     * const picture = await prisma.picture.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends PictureUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, PictureUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Picture.
-     * @param {PictureUpsertArgs} args - Arguments to update or create a Picture.
-     * @example
-     * // Update or create a Picture
-     * const picture = await prisma.picture.upsert({
-     *   create: {
-     *     // ... data to create a Picture
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Picture we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends PictureUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, PictureUpsertArgs<ExtArgs>>
-    ): Prisma__PictureClient<$Result.GetResult<Prisma.$PicturePayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
-
-    /**
-     * Count the number of Pictures.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PictureCountArgs} args - Arguments to filter Pictures to count.
-     * @example
-     * // Count the number of Pictures
-     * const count = await prisma.picture.count({
-     *   where: {
-     *     // ... the filter for the Pictures we want to count
-     *   }
-     * })
-    **/
-    count<T extends PictureCountArgs>(
-      args?: Subset<T, PictureCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], PictureCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Picture.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PictureAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends PictureAggregateArgs>(args: Subset<T, PictureAggregateArgs>): Prisma.PrismaPromise<GetPictureAggregateType<T>>
-
-    /**
-     * Group by Picture.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PictureGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends PictureGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PictureGroupByArgs['orderBy'] }
-        : { orderBy?: PictureGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, PictureGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPictureGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Picture model
-   */
-  readonly fields: PictureFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Picture.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__PictureClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-
-    task<T extends TaskDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskDefaultArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
-
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
-  }
-
-
-
-  /**
-   * Fields of the Picture model
-   */ 
-  interface PictureFieldRefs {
-    readonly id: FieldRef<"Picture", 'Int'>
-    readonly createdAt: FieldRef<"Picture", 'DateTime'>
-    readonly updatedAt: FieldRef<"Picture", 'DateTime'>
-    readonly data: FieldRef<"Picture", 'Bytes'>
-    readonly taskId: FieldRef<"Picture", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-
-  /**
-   * Picture findUnique
-   */
-  export type PictureFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-    /**
-     * Filter, which Picture to fetch.
-     */
-    where: PictureWhereUniqueInput
-  }
-
-
-  /**
-   * Picture findUniqueOrThrow
-   */
-  export type PictureFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-    /**
-     * Filter, which Picture to fetch.
-     */
-    where: PictureWhereUniqueInput
-  }
-
-
-  /**
-   * Picture findFirst
-   */
-  export type PictureFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-    /**
-     * Filter, which Picture to fetch.
-     */
-    where?: PictureWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Pictures to fetch.
-     */
-    orderBy?: PictureOrderByWithRelationInput | PictureOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Pictures.
-     */
-    cursor?: PictureWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Pictures from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Pictures.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Pictures.
-     */
-    distinct?: PictureScalarFieldEnum | PictureScalarFieldEnum[]
-  }
-
-
-  /**
-   * Picture findFirstOrThrow
-   */
-  export type PictureFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-    /**
-     * Filter, which Picture to fetch.
-     */
-    where?: PictureWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Pictures to fetch.
-     */
-    orderBy?: PictureOrderByWithRelationInput | PictureOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Pictures.
-     */
-    cursor?: PictureWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Pictures from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Pictures.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Pictures.
-     */
-    distinct?: PictureScalarFieldEnum | PictureScalarFieldEnum[]
-  }
-
-
-  /**
-   * Picture findMany
-   */
-  export type PictureFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-    /**
-     * Filter, which Pictures to fetch.
-     */
-    where?: PictureWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Pictures to fetch.
-     */
-    orderBy?: PictureOrderByWithRelationInput | PictureOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Pictures.
-     */
-    cursor?: PictureWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Pictures from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Pictures.
-     */
-    skip?: number
-    distinct?: PictureScalarFieldEnum | PictureScalarFieldEnum[]
-  }
-
-
-  /**
-   * Picture create
-   */
-  export type PictureCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Picture.
-     */
-    data: XOR<PictureCreateInput, PictureUncheckedCreateInput>
-  }
-
-
-  /**
-   * Picture createMany
-   */
-  export type PictureCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Pictures.
-     */
-    data: PictureCreateManyInput | PictureCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-
-  /**
-   * Picture update
-   */
-  export type PictureUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Picture.
-     */
-    data: XOR<PictureUpdateInput, PictureUncheckedUpdateInput>
-    /**
-     * Choose, which Picture to update.
-     */
-    where: PictureWhereUniqueInput
-  }
-
-
-  /**
-   * Picture updateMany
-   */
-  export type PictureUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Pictures.
-     */
-    data: XOR<PictureUpdateManyMutationInput, PictureUncheckedUpdateManyInput>
-    /**
-     * Filter which Pictures to update
-     */
-    where?: PictureWhereInput
-  }
-
-
-  /**
-   * Picture upsert
-   */
-  export type PictureUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Picture to update in case it exists.
-     */
-    where: PictureWhereUniqueInput
-    /**
-     * In case the Picture found by the `where` argument doesn't exist, create a new Picture with this data.
-     */
-    create: XOR<PictureCreateInput, PictureUncheckedCreateInput>
-    /**
-     * In case the Picture was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<PictureUpdateInput, PictureUncheckedUpdateInput>
-  }
-
-
-  /**
-   * Picture delete
-   */
-  export type PictureDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-    /**
-     * Filter which Picture to delete.
-     */
-    where: PictureWhereUniqueInput
-  }
-
-
-  /**
-   * Picture deleteMany
-   */
-  export type PictureDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Pictures to delete
-     */
-    where?: PictureWhereInput
-  }
-
-
-  /**
-   * Picture without action
-   */
-  export type PictureDefaultArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Picture
-     */
-    select?: PictureSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: PictureInclude<ExtArgs> | null
-  }
-
-
-
-  /**
    * Enums
    */
 
@@ -7473,7 +6466,8 @@ export namespace Prisma {
     name: 'name',
     color: 'color',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    userId: 'userId'
   };
 
   export type LabelScalarFieldEnum = (typeof LabelScalarFieldEnum)[keyof typeof LabelScalarFieldEnum]
@@ -7482,6 +6476,7 @@ export namespace Prisma {
   export const SubtaskScalarFieldEnum: {
     id: 'id',
     title: 'title',
+    description: 'description',
     completed: 'completed',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -7489,17 +6484,6 @@ export namespace Prisma {
   };
 
   export type SubtaskScalarFieldEnum = (typeof SubtaskScalarFieldEnum)[keyof typeof SubtaskScalarFieldEnum]
-
-
-  export const PictureScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    data: 'data',
-    taskId: 'taskId'
-  };
-
-  export type PictureScalarFieldEnum = (typeof PictureScalarFieldEnum)[keyof typeof PictureScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -7595,20 +6579,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Bytes'
-   */
-  export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
-    
-
-
-  /**
-   * Reference to a field of type 'Bytes[]'
-   */
-  export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -7637,6 +6607,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Users"> | Date | string
     updatedAt?: DateTimeFilter<"Users"> | Date | string
     groups?: GroupListRelationFilter
+    labels?: LabelListRelationFilter
   }
 
   export type UsersOrderByWithRelationInput = {
@@ -7648,6 +6619,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     groups?: GroupOrderByRelationAggregateInput
+    labels?: LabelOrderByRelationAggregateInput
   }
 
   export type UsersWhereUniqueInput = Prisma.AtLeast<{
@@ -7662,6 +6634,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Users"> | Date | string
     updatedAt?: DateTimeFilter<"Users"> | Date | string
     groups?: GroupListRelationFilter
+    labels?: LabelListRelationFilter
   }, "id" | "email">
 
   export type UsersOrderByWithAggregationInput = {
@@ -7697,8 +6670,8 @@ export namespace Prisma {
     OR?: GroupWhereInput[]
     NOT?: GroupWhereInput | GroupWhereInput[]
     id?: IntFilter<"Group"> | number
-    title?: StringNullableFilter<"Group"> | string | null
-    description?: StringNullableFilter<"Group"> | string | null
+    title?: StringFilter<"Group"> | string
+    description?: StringFilter<"Group"> | string
     createdAt?: DateTimeFilter<"Group"> | Date | string
     updatedAt?: DateTimeFilter<"Group"> | Date | string
     userId?: IntFilter<"Group"> | number
@@ -7708,8 +6681,8 @@ export namespace Prisma {
 
   export type GroupOrderByWithRelationInput = {
     id?: SortOrder
-    title?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -7722,8 +6695,8 @@ export namespace Prisma {
     AND?: GroupWhereInput | GroupWhereInput[]
     OR?: GroupWhereInput[]
     NOT?: GroupWhereInput | GroupWhereInput[]
-    title?: StringNullableFilter<"Group"> | string | null
-    description?: StringNullableFilter<"Group"> | string | null
+    title?: StringFilter<"Group"> | string
+    description?: StringFilter<"Group"> | string
     createdAt?: DateTimeFilter<"Group"> | Date | string
     updatedAt?: DateTimeFilter<"Group"> | Date | string
     userId?: IntFilter<"Group"> | number
@@ -7733,8 +6706,8 @@ export namespace Prisma {
 
   export type GroupOrderByWithAggregationInput = {
     id?: SortOrder
-    title?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -7750,8 +6723,8 @@ export namespace Prisma {
     OR?: GroupScalarWhereWithAggregatesInput[]
     NOT?: GroupScalarWhereWithAggregatesInput | GroupScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Group"> | number
-    title?: StringNullableWithAggregatesFilter<"Group"> | string | null
-    description?: StringNullableWithAggregatesFilter<"Group"> | string | null
+    title?: StringWithAggregatesFilter<"Group"> | string
+    description?: StringWithAggregatesFilter<"Group"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Group"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Group"> | Date | string
     userId?: IntWithAggregatesFilter<"Group"> | number
@@ -7762,8 +6735,8 @@ export namespace Prisma {
     OR?: TaskWhereInput[]
     NOT?: TaskWhereInput | TaskWhereInput[]
     id?: IntFilter<"Task"> | number
-    title?: StringNullableFilter<"Task"> | string | null
-    description?: StringNullableFilter<"Task"> | string | null
+    title?: StringFilter<"Task"> | string
+    description?: StringFilter<"Task"> | string
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completed?: BoolFilter<"Task"> | boolean
     priority?: EnumTaskPriorityNullableFilter<"Task"> | $Enums.TaskPriority | null
@@ -7773,13 +6746,12 @@ export namespace Prisma {
     group?: XOR<GroupRelationFilter, GroupWhereInput>
     labels?: LabelListRelationFilter
     subTasks?: SubtaskListRelationFilter
-    pictures?: PictureListRelationFilter
   }
 
   export type TaskOrderByWithRelationInput = {
     id?: SortOrder
-    title?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrder
     dueDate?: SortOrderInput | SortOrder
     completed?: SortOrder
     priority?: SortOrderInput | SortOrder
@@ -7789,7 +6761,6 @@ export namespace Prisma {
     group?: GroupOrderByWithRelationInput
     labels?: LabelOrderByRelationAggregateInput
     subTasks?: SubtaskOrderByRelationAggregateInput
-    pictures?: PictureOrderByRelationAggregateInput
   }
 
   export type TaskWhereUniqueInput = Prisma.AtLeast<{
@@ -7797,8 +6768,8 @@ export namespace Prisma {
     AND?: TaskWhereInput | TaskWhereInput[]
     OR?: TaskWhereInput[]
     NOT?: TaskWhereInput | TaskWhereInput[]
-    title?: StringNullableFilter<"Task"> | string | null
-    description?: StringNullableFilter<"Task"> | string | null
+    title?: StringFilter<"Task"> | string
+    description?: StringFilter<"Task"> | string
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completed?: BoolFilter<"Task"> | boolean
     priority?: EnumTaskPriorityNullableFilter<"Task"> | $Enums.TaskPriority | null
@@ -7808,13 +6779,12 @@ export namespace Prisma {
     group?: XOR<GroupRelationFilter, GroupWhereInput>
     labels?: LabelListRelationFilter
     subTasks?: SubtaskListRelationFilter
-    pictures?: PictureListRelationFilter
   }, "id">
 
   export type TaskOrderByWithAggregationInput = {
     id?: SortOrder
-    title?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrder
     dueDate?: SortOrderInput | SortOrder
     completed?: SortOrder
     priority?: SortOrderInput | SortOrder
@@ -7833,8 +6803,8 @@ export namespace Prisma {
     OR?: TaskScalarWhereWithAggregatesInput[]
     NOT?: TaskScalarWhereWithAggregatesInput | TaskScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Task"> | number
-    title?: StringNullableWithAggregatesFilter<"Task"> | string | null
-    description?: StringNullableWithAggregatesFilter<"Task"> | string | null
+    title?: StringWithAggregatesFilter<"Task"> | string
+    description?: StringWithAggregatesFilter<"Task"> | string
     dueDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     completed?: BoolWithAggregatesFilter<"Task"> | boolean
     priority?: EnumTaskPriorityNullableWithAggregatesFilter<"Task"> | $Enums.TaskPriority | null
@@ -7852,7 +6822,9 @@ export namespace Prisma {
     color?: StringFilter<"Label"> | string
     createdAt?: DateTimeFilter<"Label"> | Date | string
     updatedAt?: DateTimeFilter<"Label"> | Date | string
+    userId?: IntFilter<"Label"> | number
     tasks?: TaskListRelationFilter
+    user?: XOR<UsersRelationFilter, UsersWhereInput>
   }
 
   export type LabelOrderByWithRelationInput = {
@@ -7861,7 +6833,9 @@ export namespace Prisma {
     color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    userId?: SortOrder
     tasks?: TaskOrderByRelationAggregateInput
+    user?: UsersOrderByWithRelationInput
   }
 
   export type LabelWhereUniqueInput = Prisma.AtLeast<{
@@ -7873,7 +6847,9 @@ export namespace Prisma {
     color?: StringFilter<"Label"> | string
     createdAt?: DateTimeFilter<"Label"> | Date | string
     updatedAt?: DateTimeFilter<"Label"> | Date | string
+    userId?: IntFilter<"Label"> | number
     tasks?: TaskListRelationFilter
+    user?: XOR<UsersRelationFilter, UsersWhereInput>
   }, "id">
 
   export type LabelOrderByWithAggregationInput = {
@@ -7882,6 +6858,7 @@ export namespace Prisma {
     color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    userId?: SortOrder
     _count?: LabelCountOrderByAggregateInput
     _avg?: LabelAvgOrderByAggregateInput
     _max?: LabelMaxOrderByAggregateInput
@@ -7898,6 +6875,7 @@ export namespace Prisma {
     color?: StringWithAggregatesFilter<"Label"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Label"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Label"> | Date | string
+    userId?: IntWithAggregatesFilter<"Label"> | number
   }
 
   export type SubtaskWhereInput = {
@@ -7906,6 +6884,7 @@ export namespace Prisma {
     NOT?: SubtaskWhereInput | SubtaskWhereInput[]
     id?: IntFilter<"Subtask"> | number
     title?: StringFilter<"Subtask"> | string
+    description?: StringFilter<"Subtask"> | string
     completed?: BoolFilter<"Subtask"> | boolean
     createdAt?: DateTimeFilter<"Subtask"> | Date | string
     updatedAt?: DateTimeFilter<"Subtask"> | Date | string
@@ -7916,6 +6895,7 @@ export namespace Prisma {
   export type SubtaskOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     completed?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -7929,6 +6909,7 @@ export namespace Prisma {
     OR?: SubtaskWhereInput[]
     NOT?: SubtaskWhereInput | SubtaskWhereInput[]
     title?: StringFilter<"Subtask"> | string
+    description?: StringFilter<"Subtask"> | string
     completed?: BoolFilter<"Subtask"> | boolean
     createdAt?: DateTimeFilter<"Subtask"> | Date | string
     updatedAt?: DateTimeFilter<"Subtask"> | Date | string
@@ -7939,6 +6920,7 @@ export namespace Prisma {
   export type SubtaskOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     completed?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -7956,67 +6938,11 @@ export namespace Prisma {
     NOT?: SubtaskScalarWhereWithAggregatesInput | SubtaskScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Subtask"> | number
     title?: StringWithAggregatesFilter<"Subtask"> | string
+    description?: StringWithAggregatesFilter<"Subtask"> | string
     completed?: BoolWithAggregatesFilter<"Subtask"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Subtask"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Subtask"> | Date | string
     taskId?: IntWithAggregatesFilter<"Subtask"> | number
-  }
-
-  export type PictureWhereInput = {
-    AND?: PictureWhereInput | PictureWhereInput[]
-    OR?: PictureWhereInput[]
-    NOT?: PictureWhereInput | PictureWhereInput[]
-    id?: IntFilter<"Picture"> | number
-    createdAt?: DateTimeFilter<"Picture"> | Date | string
-    updatedAt?: DateTimeFilter<"Picture"> | Date | string
-    data?: BytesFilter<"Picture"> | Buffer
-    taskId?: IntFilter<"Picture"> | number
-    task?: XOR<TaskRelationFilter, TaskWhereInput>
-  }
-
-  export type PictureOrderByWithRelationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    data?: SortOrder
-    taskId?: SortOrder
-    task?: TaskOrderByWithRelationInput
-  }
-
-  export type PictureWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: PictureWhereInput | PictureWhereInput[]
-    OR?: PictureWhereInput[]
-    NOT?: PictureWhereInput | PictureWhereInput[]
-    createdAt?: DateTimeFilter<"Picture"> | Date | string
-    updatedAt?: DateTimeFilter<"Picture"> | Date | string
-    data?: BytesFilter<"Picture"> | Buffer
-    taskId?: IntFilter<"Picture"> | number
-    task?: XOR<TaskRelationFilter, TaskWhereInput>
-  }, "id">
-
-  export type PictureOrderByWithAggregationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    data?: SortOrder
-    taskId?: SortOrder
-    _count?: PictureCountOrderByAggregateInput
-    _avg?: PictureAvgOrderByAggregateInput
-    _max?: PictureMaxOrderByAggregateInput
-    _min?: PictureMinOrderByAggregateInput
-    _sum?: PictureSumOrderByAggregateInput
-  }
-
-  export type PictureScalarWhereWithAggregatesInput = {
-    AND?: PictureScalarWhereWithAggregatesInput | PictureScalarWhereWithAggregatesInput[]
-    OR?: PictureScalarWhereWithAggregatesInput[]
-    NOT?: PictureScalarWhereWithAggregatesInput | PictureScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Picture"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"Picture"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Picture"> | Date | string
-    data?: BytesWithAggregatesFilter<"Picture"> | Buffer
-    taskId?: IntWithAggregatesFilter<"Picture"> | number
   }
 
   export type UsersCreateInput = {
@@ -8027,6 +6953,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     groups?: GroupCreateNestedManyWithoutUserInput
+    labels?: LabelCreateNestedManyWithoutUserInput
   }
 
   export type UsersUncheckedCreateInput = {
@@ -8038,6 +6965,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     groups?: GroupUncheckedCreateNestedManyWithoutUserInput
+    labels?: LabelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UsersUpdateInput = {
@@ -8048,6 +6976,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groups?: GroupUpdateManyWithoutUserNestedInput
+    labels?: LabelUpdateManyWithoutUserNestedInput
   }
 
   export type UsersUncheckedUpdateInput = {
@@ -8059,6 +6988,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groups?: GroupUncheckedUpdateManyWithoutUserNestedInput
+    labels?: LabelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UsersCreateManyInput = {
@@ -8091,8 +7021,8 @@ export namespace Prisma {
   }
 
   export type GroupCreateInput = {
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UsersCreateNestedOneWithoutGroupsInput
@@ -8101,8 +7031,8 @@ export namespace Prisma {
 
   export type GroupUncheckedCreateInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: number
@@ -8110,8 +7040,8 @@ export namespace Prisma {
   }
 
   export type GroupUpdateInput = {
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UsersUpdateOneRequiredWithoutGroupsNestedInput
@@ -8120,8 +7050,8 @@ export namespace Prisma {
 
   export type GroupUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: IntFieldUpdateOperationsInput | number
@@ -8130,32 +7060,32 @@ export namespace Prisma {
 
   export type GroupCreateManyInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: number
   }
 
   export type GroupUpdateManyMutationInput = {
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GroupUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: IntFieldUpdateOperationsInput | number
   }
 
   export type TaskCreateInput = {
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     dueDate?: Date | string | null
     completed?: boolean
     priority?: $Enums.TaskPriority | null
@@ -8164,13 +7094,12 @@ export namespace Prisma {
     group: GroupCreateNestedOneWithoutTasksInput
     labels?: LabelCreateNestedManyWithoutTasksInput
     subTasks?: SubtaskCreateNestedManyWithoutTaskInput
-    pictures?: PictureCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     dueDate?: Date | string | null
     completed?: boolean
     priority?: $Enums.TaskPriority | null
@@ -8179,12 +7108,11 @@ export namespace Prisma {
     groupId: number
     labels?: LabelUncheckedCreateNestedManyWithoutTasksInput
     subTasks?: SubtaskUncheckedCreateNestedManyWithoutTaskInput
-    pictures?: PictureUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUpdateInput = {
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -8193,13 +7121,12 @@ export namespace Prisma {
     group?: GroupUpdateOneRequiredWithoutTasksNestedInput
     labels?: LabelUpdateManyWithoutTasksNestedInput
     subTasks?: SubtaskUpdateManyWithoutTaskNestedInput
-    pictures?: PictureUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -8208,13 +7135,12 @@ export namespace Prisma {
     groupId?: IntFieldUpdateOperationsInput | number
     labels?: LabelUncheckedUpdateManyWithoutTasksNestedInput
     subTasks?: SubtaskUncheckedUpdateManyWithoutTaskNestedInput
-    pictures?: PictureUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskCreateManyInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     dueDate?: Date | string | null
     completed?: boolean
     priority?: $Enums.TaskPriority | null
@@ -8224,8 +7150,8 @@ export namespace Prisma {
   }
 
   export type TaskUpdateManyMutationInput = {
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -8235,8 +7161,8 @@ export namespace Prisma {
 
   export type TaskUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -8251,6 +7177,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     tasks?: TaskCreateNestedManyWithoutLabelsInput
+    user: UsersCreateNestedOneWithoutLabelsInput
   }
 
   export type LabelUncheckedCreateInput = {
@@ -8259,6 +7186,7 @@ export namespace Prisma {
     color: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    userId: number
     tasks?: TaskUncheckedCreateNestedManyWithoutLabelsInput
   }
 
@@ -8268,6 +7196,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUpdateManyWithoutLabelsNestedInput
+    user?: UsersUpdateOneRequiredWithoutLabelsNestedInput
   }
 
   export type LabelUncheckedUpdateInput = {
@@ -8276,6 +7205,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
     tasks?: TaskUncheckedUpdateManyWithoutLabelsNestedInput
   }
 
@@ -8285,6 +7215,7 @@ export namespace Prisma {
     color: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    userId: number
   }
 
   export type LabelUpdateManyMutationInput = {
@@ -8300,10 +7231,12 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
   }
 
   export type SubtaskCreateInput = {
     title: string
+    description: string
     completed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8313,6 +7246,7 @@ export namespace Prisma {
   export type SubtaskUncheckedCreateInput = {
     id?: number
     title: string
+    description: string
     completed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8321,6 +7255,7 @@ export namespace Prisma {
 
   export type SubtaskUpdateInput = {
     title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8330,6 +7265,7 @@ export namespace Prisma {
   export type SubtaskUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8339,6 +7275,7 @@ export namespace Prisma {
   export type SubtaskCreateManyInput = {
     id?: number
     title: string
+    description: string
     completed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8347,6 +7284,7 @@ export namespace Prisma {
 
   export type SubtaskUpdateManyMutationInput = {
     title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8355,61 +7293,10 @@ export namespace Prisma {
   export type SubtaskUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    taskId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type PictureCreateInput = {
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    data: Buffer
-    task: TaskCreateNestedOneWithoutPicturesInput
-  }
-
-  export type PictureUncheckedCreateInput = {
-    id?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    data: Buffer
-    taskId: number
-  }
-
-  export type PictureUpdateInput = {
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
-    task?: TaskUpdateOneRequiredWithoutPicturesNestedInput
-  }
-
-  export type PictureUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
-    taskId?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type PictureCreateManyInput = {
-    id?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    data: Buffer
-    taskId: number
-  }
-
-  export type PictureUpdateManyMutationInput = {
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
-  }
-
-  export type PictureUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
     taskId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -8456,7 +7343,17 @@ export namespace Prisma {
     none?: GroupWhereInput
   }
 
+  export type LabelListRelationFilter = {
+    every?: LabelWhereInput
+    some?: LabelWhereInput
+    none?: LabelWhereInput
+  }
+
   export type GroupOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LabelOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -8546,21 +7443,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type UsersRelationFilter = {
     is?: UsersWhereInput
     isNot?: UsersWhereInput
@@ -8570,11 +7452,6 @@ export namespace Prisma {
     every?: TaskWhereInput
     some?: TaskWhereInput
     none?: TaskWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type TaskOrderByRelationAggregateInput = {
@@ -8618,24 +7495,6 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -8664,33 +7523,18 @@ export namespace Prisma {
     isNot?: GroupWhereInput
   }
 
-  export type LabelListRelationFilter = {
-    every?: LabelWhereInput
-    some?: LabelWhereInput
-    none?: LabelWhereInput
-  }
-
   export type SubtaskListRelationFilter = {
     every?: SubtaskWhereInput
     some?: SubtaskWhereInput
     none?: SubtaskWhereInput
   }
 
-  export type PictureListRelationFilter = {
-    every?: PictureWhereInput
-    some?: PictureWhereInput
-    none?: PictureWhereInput
-  }
-
-  export type LabelOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type SubtaskOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PictureOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -8778,10 +7622,12 @@ export namespace Prisma {
     color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    userId?: SortOrder
   }
 
   export type LabelAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type LabelMaxOrderByAggregateInput = {
@@ -8790,6 +7636,7 @@ export namespace Prisma {
     color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    userId?: SortOrder
   }
 
   export type LabelMinOrderByAggregateInput = {
@@ -8798,10 +7645,12 @@ export namespace Prisma {
     color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    userId?: SortOrder
   }
 
   export type LabelSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type TaskRelationFilter = {
@@ -8812,6 +7661,7 @@ export namespace Prisma {
   export type SubtaskCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     completed?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8826,6 +7676,7 @@ export namespace Prisma {
   export type SubtaskMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     completed?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8835,6 +7686,7 @@ export namespace Prisma {
   export type SubtaskMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     completed?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8846,57 +7698,6 @@ export namespace Prisma {
     taskId?: SortOrder
   }
 
-  export type BytesFilter<$PrismaModel = never> = {
-    equals?: Buffer | BytesFieldRefInput<$PrismaModel>
-    in?: Buffer[] | ListBytesFieldRefInput<$PrismaModel>
-    notIn?: Buffer[] | ListBytesFieldRefInput<$PrismaModel>
-    not?: NestedBytesFilter<$PrismaModel> | Buffer
-  }
-
-  export type PictureCountOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    data?: SortOrder
-    taskId?: SortOrder
-  }
-
-  export type PictureAvgOrderByAggregateInput = {
-    id?: SortOrder
-    taskId?: SortOrder
-  }
-
-  export type PictureMaxOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    data?: SortOrder
-    taskId?: SortOrder
-  }
-
-  export type PictureMinOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    data?: SortOrder
-    taskId?: SortOrder
-  }
-
-  export type PictureSumOrderByAggregateInput = {
-    id?: SortOrder
-    taskId?: SortOrder
-  }
-
-  export type BytesWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Buffer | BytesFieldRefInput<$PrismaModel>
-    in?: Buffer[] | ListBytesFieldRefInput<$PrismaModel>
-    notIn?: Buffer[] | ListBytesFieldRefInput<$PrismaModel>
-    not?: NestedBytesWithAggregatesFilter<$PrismaModel> | Buffer
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBytesFilter<$PrismaModel>
-    _max?: NestedBytesFilter<$PrismaModel>
-  }
-
   export type GroupCreateNestedManyWithoutUserInput = {
     create?: XOR<GroupCreateWithoutUserInput, GroupUncheckedCreateWithoutUserInput> | GroupCreateWithoutUserInput[] | GroupUncheckedCreateWithoutUserInput[]
     connectOrCreate?: GroupCreateOrConnectWithoutUserInput | GroupCreateOrConnectWithoutUserInput[]
@@ -8904,11 +7705,25 @@ export namespace Prisma {
     connect?: GroupWhereUniqueInput | GroupWhereUniqueInput[]
   }
 
+  export type LabelCreateNestedManyWithoutUserInput = {
+    create?: XOR<LabelCreateWithoutUserInput, LabelUncheckedCreateWithoutUserInput> | LabelCreateWithoutUserInput[] | LabelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LabelCreateOrConnectWithoutUserInput | LabelCreateOrConnectWithoutUserInput[]
+    createMany?: LabelCreateManyUserInputEnvelope
+    connect?: LabelWhereUniqueInput | LabelWhereUniqueInput[]
+  }
+
   export type GroupUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<GroupCreateWithoutUserInput, GroupUncheckedCreateWithoutUserInput> | GroupCreateWithoutUserInput[] | GroupUncheckedCreateWithoutUserInput[]
     connectOrCreate?: GroupCreateOrConnectWithoutUserInput | GroupCreateOrConnectWithoutUserInput[]
     createMany?: GroupCreateManyUserInputEnvelope
     connect?: GroupWhereUniqueInput | GroupWhereUniqueInput[]
+  }
+
+  export type LabelUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<LabelCreateWithoutUserInput, LabelUncheckedCreateWithoutUserInput> | LabelCreateWithoutUserInput[] | LabelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LabelCreateOrConnectWithoutUserInput | LabelCreateOrConnectWithoutUserInput[]
+    createMany?: LabelCreateManyUserInputEnvelope
+    connect?: LabelWhereUniqueInput | LabelWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -8933,6 +7748,20 @@ export namespace Prisma {
     deleteMany?: GroupScalarWhereInput | GroupScalarWhereInput[]
   }
 
+  export type LabelUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LabelCreateWithoutUserInput, LabelUncheckedCreateWithoutUserInput> | LabelCreateWithoutUserInput[] | LabelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LabelCreateOrConnectWithoutUserInput | LabelCreateOrConnectWithoutUserInput[]
+    upsert?: LabelUpsertWithWhereUniqueWithoutUserInput | LabelUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LabelCreateManyUserInputEnvelope
+    set?: LabelWhereUniqueInput | LabelWhereUniqueInput[]
+    disconnect?: LabelWhereUniqueInput | LabelWhereUniqueInput[]
+    delete?: LabelWhereUniqueInput | LabelWhereUniqueInput[]
+    connect?: LabelWhereUniqueInput | LabelWhereUniqueInput[]
+    update?: LabelUpdateWithWhereUniqueWithoutUserInput | LabelUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LabelUpdateManyWithWhereWithoutUserInput | LabelUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LabelScalarWhereInput | LabelScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -8955,6 +7784,20 @@ export namespace Prisma {
     deleteMany?: GroupScalarWhereInput | GroupScalarWhereInput[]
   }
 
+  export type LabelUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LabelCreateWithoutUserInput, LabelUncheckedCreateWithoutUserInput> | LabelCreateWithoutUserInput[] | LabelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LabelCreateOrConnectWithoutUserInput | LabelCreateOrConnectWithoutUserInput[]
+    upsert?: LabelUpsertWithWhereUniqueWithoutUserInput | LabelUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LabelCreateManyUserInputEnvelope
+    set?: LabelWhereUniqueInput | LabelWhereUniqueInput[]
+    disconnect?: LabelWhereUniqueInput | LabelWhereUniqueInput[]
+    delete?: LabelWhereUniqueInput | LabelWhereUniqueInput[]
+    connect?: LabelWhereUniqueInput | LabelWhereUniqueInput[]
+    update?: LabelUpdateWithWhereUniqueWithoutUserInput | LabelUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LabelUpdateManyWithWhereWithoutUserInput | LabelUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LabelScalarWhereInput | LabelScalarWhereInput[]
+  }
+
   export type UsersCreateNestedOneWithoutGroupsInput = {
     create?: XOR<UsersCreateWithoutGroupsInput, UsersUncheckedCreateWithoutGroupsInput>
     connectOrCreate?: UsersCreateOrConnectWithoutGroupsInput
@@ -8973,10 +7816,6 @@ export namespace Prisma {
     connectOrCreate?: TaskCreateOrConnectWithoutGroupInput | TaskCreateOrConnectWithoutGroupInput[]
     createMany?: TaskCreateManyGroupInputEnvelope
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type UsersUpdateOneRequiredWithoutGroupsNestedInput = {
@@ -9034,13 +7873,6 @@ export namespace Prisma {
     connect?: SubtaskWhereUniqueInput | SubtaskWhereUniqueInput[]
   }
 
-  export type PictureCreateNestedManyWithoutTaskInput = {
-    create?: XOR<PictureCreateWithoutTaskInput, PictureUncheckedCreateWithoutTaskInput> | PictureCreateWithoutTaskInput[] | PictureUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: PictureCreateOrConnectWithoutTaskInput | PictureCreateOrConnectWithoutTaskInput[]
-    createMany?: PictureCreateManyTaskInputEnvelope
-    connect?: PictureWhereUniqueInput | PictureWhereUniqueInput[]
-  }
-
   export type LabelUncheckedCreateNestedManyWithoutTasksInput = {
     create?: XOR<LabelCreateWithoutTasksInput, LabelUncheckedCreateWithoutTasksInput> | LabelCreateWithoutTasksInput[] | LabelUncheckedCreateWithoutTasksInput[]
     connectOrCreate?: LabelCreateOrConnectWithoutTasksInput | LabelCreateOrConnectWithoutTasksInput[]
@@ -9052,13 +7884,6 @@ export namespace Prisma {
     connectOrCreate?: SubtaskCreateOrConnectWithoutTaskInput | SubtaskCreateOrConnectWithoutTaskInput[]
     createMany?: SubtaskCreateManyTaskInputEnvelope
     connect?: SubtaskWhereUniqueInput | SubtaskWhereUniqueInput[]
-  }
-
-  export type PictureUncheckedCreateNestedManyWithoutTaskInput = {
-    create?: XOR<PictureCreateWithoutTaskInput, PictureUncheckedCreateWithoutTaskInput> | PictureCreateWithoutTaskInput[] | PictureUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: PictureCreateOrConnectWithoutTaskInput | PictureCreateOrConnectWithoutTaskInput[]
-    createMany?: PictureCreateManyTaskInputEnvelope
-    connect?: PictureWhereUniqueInput | PictureWhereUniqueInput[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -9108,20 +7933,6 @@ export namespace Prisma {
     deleteMany?: SubtaskScalarWhereInput | SubtaskScalarWhereInput[]
   }
 
-  export type PictureUpdateManyWithoutTaskNestedInput = {
-    create?: XOR<PictureCreateWithoutTaskInput, PictureUncheckedCreateWithoutTaskInput> | PictureCreateWithoutTaskInput[] | PictureUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: PictureCreateOrConnectWithoutTaskInput | PictureCreateOrConnectWithoutTaskInput[]
-    upsert?: PictureUpsertWithWhereUniqueWithoutTaskInput | PictureUpsertWithWhereUniqueWithoutTaskInput[]
-    createMany?: PictureCreateManyTaskInputEnvelope
-    set?: PictureWhereUniqueInput | PictureWhereUniqueInput[]
-    disconnect?: PictureWhereUniqueInput | PictureWhereUniqueInput[]
-    delete?: PictureWhereUniqueInput | PictureWhereUniqueInput[]
-    connect?: PictureWhereUniqueInput | PictureWhereUniqueInput[]
-    update?: PictureUpdateWithWhereUniqueWithoutTaskInput | PictureUpdateWithWhereUniqueWithoutTaskInput[]
-    updateMany?: PictureUpdateManyWithWhereWithoutTaskInput | PictureUpdateManyWithWhereWithoutTaskInput[]
-    deleteMany?: PictureScalarWhereInput | PictureScalarWhereInput[]
-  }
-
   export type LabelUncheckedUpdateManyWithoutTasksNestedInput = {
     create?: XOR<LabelCreateWithoutTasksInput, LabelUncheckedCreateWithoutTasksInput> | LabelCreateWithoutTasksInput[] | LabelUncheckedCreateWithoutTasksInput[]
     connectOrCreate?: LabelCreateOrConnectWithoutTasksInput | LabelCreateOrConnectWithoutTasksInput[]
@@ -9149,24 +7960,16 @@ export namespace Prisma {
     deleteMany?: SubtaskScalarWhereInput | SubtaskScalarWhereInput[]
   }
 
-  export type PictureUncheckedUpdateManyWithoutTaskNestedInput = {
-    create?: XOR<PictureCreateWithoutTaskInput, PictureUncheckedCreateWithoutTaskInput> | PictureCreateWithoutTaskInput[] | PictureUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: PictureCreateOrConnectWithoutTaskInput | PictureCreateOrConnectWithoutTaskInput[]
-    upsert?: PictureUpsertWithWhereUniqueWithoutTaskInput | PictureUpsertWithWhereUniqueWithoutTaskInput[]
-    createMany?: PictureCreateManyTaskInputEnvelope
-    set?: PictureWhereUniqueInput | PictureWhereUniqueInput[]
-    disconnect?: PictureWhereUniqueInput | PictureWhereUniqueInput[]
-    delete?: PictureWhereUniqueInput | PictureWhereUniqueInput[]
-    connect?: PictureWhereUniqueInput | PictureWhereUniqueInput[]
-    update?: PictureUpdateWithWhereUniqueWithoutTaskInput | PictureUpdateWithWhereUniqueWithoutTaskInput[]
-    updateMany?: PictureUpdateManyWithWhereWithoutTaskInput | PictureUpdateManyWithWhereWithoutTaskInput[]
-    deleteMany?: PictureScalarWhereInput | PictureScalarWhereInput[]
-  }
-
   export type TaskCreateNestedManyWithoutLabelsInput = {
     create?: XOR<TaskCreateWithoutLabelsInput, TaskUncheckedCreateWithoutLabelsInput> | TaskCreateWithoutLabelsInput[] | TaskUncheckedCreateWithoutLabelsInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutLabelsInput | TaskCreateOrConnectWithoutLabelsInput[]
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type UsersCreateNestedOneWithoutLabelsInput = {
+    create?: XOR<UsersCreateWithoutLabelsInput, UsersUncheckedCreateWithoutLabelsInput>
+    connectOrCreate?: UsersCreateOrConnectWithoutLabelsInput
+    connect?: UsersWhereUniqueInput
   }
 
   export type TaskUncheckedCreateNestedManyWithoutLabelsInput = {
@@ -9186,6 +7989,14 @@ export namespace Prisma {
     update?: TaskUpdateWithWhereUniqueWithoutLabelsInput | TaskUpdateWithWhereUniqueWithoutLabelsInput[]
     updateMany?: TaskUpdateManyWithWhereWithoutLabelsInput | TaskUpdateManyWithWhereWithoutLabelsInput[]
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type UsersUpdateOneRequiredWithoutLabelsNestedInput = {
+    create?: XOR<UsersCreateWithoutLabelsInput, UsersUncheckedCreateWithoutLabelsInput>
+    connectOrCreate?: UsersCreateOrConnectWithoutLabelsInput
+    upsert?: UsersUpsertWithoutLabelsInput
+    connect?: UsersWhereUniqueInput
+    update?: XOR<XOR<UsersUpdateToOneWithWhereWithoutLabelsInput, UsersUpdateWithoutLabelsInput>, UsersUncheckedUpdateWithoutLabelsInput>
   }
 
   export type TaskUncheckedUpdateManyWithoutLabelsNestedInput = {
@@ -9213,24 +8024,6 @@ export namespace Prisma {
     upsert?: TaskUpsertWithoutSubTasksInput
     connect?: TaskWhereUniqueInput
     update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutSubTasksInput, TaskUpdateWithoutSubTasksInput>, TaskUncheckedUpdateWithoutSubTasksInput>
-  }
-
-  export type TaskCreateNestedOneWithoutPicturesInput = {
-    create?: XOR<TaskCreateWithoutPicturesInput, TaskUncheckedCreateWithoutPicturesInput>
-    connectOrCreate?: TaskCreateOrConnectWithoutPicturesInput
-    connect?: TaskWhereUniqueInput
-  }
-
-  export type BytesFieldUpdateOperationsInput = {
-    set?: Buffer
-  }
-
-  export type TaskUpdateOneRequiredWithoutPicturesNestedInput = {
-    create?: XOR<TaskCreateWithoutPicturesInput, TaskUncheckedCreateWithoutPicturesInput>
-    connectOrCreate?: TaskCreateOrConnectWithoutPicturesInput
-    upsert?: TaskUpsertWithoutPicturesInput
-    connect?: TaskWhereUniqueInput
-    update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutPicturesInput, TaskUpdateWithoutPicturesInput>, TaskUncheckedUpdateWithoutPicturesInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -9327,48 +8120,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -9406,6 +8157,17 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -9424,26 +8186,9 @@ export namespace Prisma {
     _max?: NestedEnumTaskPriorityNullableFilter<$PrismaModel>
   }
 
-  export type NestedBytesFilter<$PrismaModel = never> = {
-    equals?: Buffer | BytesFieldRefInput<$PrismaModel>
-    in?: Buffer[] | ListBytesFieldRefInput<$PrismaModel>
-    notIn?: Buffer[] | ListBytesFieldRefInput<$PrismaModel>
-    not?: NestedBytesFilter<$PrismaModel> | Buffer
-  }
-
-  export type NestedBytesWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Buffer | BytesFieldRefInput<$PrismaModel>
-    in?: Buffer[] | ListBytesFieldRefInput<$PrismaModel>
-    notIn?: Buffer[] | ListBytesFieldRefInput<$PrismaModel>
-    not?: NestedBytesWithAggregatesFilter<$PrismaModel> | Buffer
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBytesFilter<$PrismaModel>
-    _max?: NestedBytesFilter<$PrismaModel>
-  }
-
   export type GroupCreateWithoutUserInput = {
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tasks?: TaskCreateNestedManyWithoutGroupInput
@@ -9451,8 +8196,8 @@ export namespace Prisma {
 
   export type GroupUncheckedCreateWithoutUserInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     createdAt?: Date | string
     updatedAt?: Date | string
     tasks?: TaskUncheckedCreateNestedManyWithoutGroupInput
@@ -9465,6 +8210,33 @@ export namespace Prisma {
 
   export type GroupCreateManyUserInputEnvelope = {
     data: GroupCreateManyUserInput | GroupCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LabelCreateWithoutUserInput = {
+    name: string
+    color: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tasks?: TaskCreateNestedManyWithoutLabelsInput
+  }
+
+  export type LabelUncheckedCreateWithoutUserInput = {
+    id?: number
+    name: string
+    color: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tasks?: TaskUncheckedCreateNestedManyWithoutLabelsInput
+  }
+
+  export type LabelCreateOrConnectWithoutUserInput = {
+    where: LabelWhereUniqueInput
+    create: XOR<LabelCreateWithoutUserInput, LabelUncheckedCreateWithoutUserInput>
+  }
+
+  export type LabelCreateManyUserInputEnvelope = {
+    data: LabelCreateManyUserInput | LabelCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -9489,11 +8261,39 @@ export namespace Prisma {
     OR?: GroupScalarWhereInput[]
     NOT?: GroupScalarWhereInput | GroupScalarWhereInput[]
     id?: IntFilter<"Group"> | number
-    title?: StringNullableFilter<"Group"> | string | null
-    description?: StringNullableFilter<"Group"> | string | null
+    title?: StringFilter<"Group"> | string
+    description?: StringFilter<"Group"> | string
     createdAt?: DateTimeFilter<"Group"> | Date | string
     updatedAt?: DateTimeFilter<"Group"> | Date | string
     userId?: IntFilter<"Group"> | number
+  }
+
+  export type LabelUpsertWithWhereUniqueWithoutUserInput = {
+    where: LabelWhereUniqueInput
+    update: XOR<LabelUpdateWithoutUserInput, LabelUncheckedUpdateWithoutUserInput>
+    create: XOR<LabelCreateWithoutUserInput, LabelUncheckedCreateWithoutUserInput>
+  }
+
+  export type LabelUpdateWithWhereUniqueWithoutUserInput = {
+    where: LabelWhereUniqueInput
+    data: XOR<LabelUpdateWithoutUserInput, LabelUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LabelUpdateManyWithWhereWithoutUserInput = {
+    where: LabelScalarWhereInput
+    data: XOR<LabelUpdateManyMutationInput, LabelUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type LabelScalarWhereInput = {
+    AND?: LabelScalarWhereInput | LabelScalarWhereInput[]
+    OR?: LabelScalarWhereInput[]
+    NOT?: LabelScalarWhereInput | LabelScalarWhereInput[]
+    id?: IntFilter<"Label"> | number
+    name?: StringFilter<"Label"> | string
+    color?: StringFilter<"Label"> | string
+    createdAt?: DateTimeFilter<"Label"> | Date | string
+    updatedAt?: DateTimeFilter<"Label"> | Date | string
+    userId?: IntFilter<"Label"> | number
   }
 
   export type UsersCreateWithoutGroupsInput = {
@@ -9503,6 +8303,7 @@ export namespace Prisma {
     lname: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    labels?: LabelCreateNestedManyWithoutUserInput
   }
 
   export type UsersUncheckedCreateWithoutGroupsInput = {
@@ -9513,6 +8314,7 @@ export namespace Prisma {
     lname: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    labels?: LabelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UsersCreateOrConnectWithoutGroupsInput = {
@@ -9521,8 +8323,8 @@ export namespace Prisma {
   }
 
   export type TaskCreateWithoutGroupInput = {
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     dueDate?: Date | string | null
     completed?: boolean
     priority?: $Enums.TaskPriority | null
@@ -9530,13 +8332,12 @@ export namespace Prisma {
     updatedAt?: Date | string
     labels?: LabelCreateNestedManyWithoutTasksInput
     subTasks?: SubtaskCreateNestedManyWithoutTaskInput
-    pictures?: PictureCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutGroupInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     dueDate?: Date | string | null
     completed?: boolean
     priority?: $Enums.TaskPriority | null
@@ -9544,7 +8345,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     labels?: LabelUncheckedCreateNestedManyWithoutTasksInput
     subTasks?: SubtaskUncheckedCreateNestedManyWithoutTaskInput
-    pictures?: PictureUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutGroupInput = {
@@ -9575,6 +8375,7 @@ export namespace Prisma {
     lname?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    labels?: LabelUpdateManyWithoutUserNestedInput
   }
 
   export type UsersUncheckedUpdateWithoutGroupsInput = {
@@ -9585,6 +8386,7 @@ export namespace Prisma {
     lname?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    labels?: LabelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TaskUpsertWithWhereUniqueWithoutGroupInput = {
@@ -9608,8 +8410,8 @@ export namespace Prisma {
     OR?: TaskScalarWhereInput[]
     NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
     id?: IntFilter<"Task"> | number
-    title?: StringNullableFilter<"Task"> | string | null
-    description?: StringNullableFilter<"Task"> | string | null
+    title?: StringFilter<"Task"> | string
+    description?: StringFilter<"Task"> | string
     dueDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     completed?: BoolFilter<"Task"> | boolean
     priority?: EnumTaskPriorityNullableFilter<"Task"> | $Enums.TaskPriority | null
@@ -9619,8 +8421,8 @@ export namespace Prisma {
   }
 
   export type GroupCreateWithoutTasksInput = {
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UsersCreateNestedOneWithoutGroupsInput
@@ -9628,8 +8430,8 @@ export namespace Prisma {
 
   export type GroupUncheckedCreateWithoutTasksInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: number
@@ -9645,6 +8447,7 @@ export namespace Prisma {
     color: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    user: UsersCreateNestedOneWithoutLabelsInput
   }
 
   export type LabelUncheckedCreateWithoutTasksInput = {
@@ -9653,6 +8456,7 @@ export namespace Prisma {
     color: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    userId: number
   }
 
   export type LabelCreateOrConnectWithoutTasksInput = {
@@ -9662,6 +8466,7 @@ export namespace Prisma {
 
   export type SubtaskCreateWithoutTaskInput = {
     title: string
+    description: string
     completed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9670,6 +8475,7 @@ export namespace Prisma {
   export type SubtaskUncheckedCreateWithoutTaskInput = {
     id?: number
     title: string
+    description: string
     completed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9685,29 +8491,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type PictureCreateWithoutTaskInput = {
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    data: Buffer
-  }
-
-  export type PictureUncheckedCreateWithoutTaskInput = {
-    id?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    data: Buffer
-  }
-
-  export type PictureCreateOrConnectWithoutTaskInput = {
-    where: PictureWhereUniqueInput
-    create: XOR<PictureCreateWithoutTaskInput, PictureUncheckedCreateWithoutTaskInput>
-  }
-
-  export type PictureCreateManyTaskInputEnvelope = {
-    data: PictureCreateManyTaskInput | PictureCreateManyTaskInput[]
-    skipDuplicates?: boolean
-  }
-
   export type GroupUpsertWithoutTasksInput = {
     update: XOR<GroupUpdateWithoutTasksInput, GroupUncheckedUpdateWithoutTasksInput>
     create: XOR<GroupCreateWithoutTasksInput, GroupUncheckedCreateWithoutTasksInput>
@@ -9720,8 +8503,8 @@ export namespace Prisma {
   }
 
   export type GroupUpdateWithoutTasksInput = {
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UsersUpdateOneRequiredWithoutGroupsNestedInput
@@ -9729,8 +8512,8 @@ export namespace Prisma {
 
   export type GroupUncheckedUpdateWithoutTasksInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: IntFieldUpdateOperationsInput | number
@@ -9750,17 +8533,6 @@ export namespace Prisma {
   export type LabelUpdateManyWithWhereWithoutTasksInput = {
     where: LabelScalarWhereInput
     data: XOR<LabelUpdateManyMutationInput, LabelUncheckedUpdateManyWithoutTasksInput>
-  }
-
-  export type LabelScalarWhereInput = {
-    AND?: LabelScalarWhereInput | LabelScalarWhereInput[]
-    OR?: LabelScalarWhereInput[]
-    NOT?: LabelScalarWhereInput | LabelScalarWhereInput[]
-    id?: IntFilter<"Label"> | number
-    name?: StringFilter<"Label"> | string
-    color?: StringFilter<"Label"> | string
-    createdAt?: DateTimeFilter<"Label"> | Date | string
-    updatedAt?: DateTimeFilter<"Label"> | Date | string
   }
 
   export type SubtaskUpsertWithWhereUniqueWithoutTaskInput = {
@@ -9785,42 +8557,16 @@ export namespace Prisma {
     NOT?: SubtaskScalarWhereInput | SubtaskScalarWhereInput[]
     id?: IntFilter<"Subtask"> | number
     title?: StringFilter<"Subtask"> | string
+    description?: StringFilter<"Subtask"> | string
     completed?: BoolFilter<"Subtask"> | boolean
     createdAt?: DateTimeFilter<"Subtask"> | Date | string
     updatedAt?: DateTimeFilter<"Subtask"> | Date | string
     taskId?: IntFilter<"Subtask"> | number
   }
 
-  export type PictureUpsertWithWhereUniqueWithoutTaskInput = {
-    where: PictureWhereUniqueInput
-    update: XOR<PictureUpdateWithoutTaskInput, PictureUncheckedUpdateWithoutTaskInput>
-    create: XOR<PictureCreateWithoutTaskInput, PictureUncheckedCreateWithoutTaskInput>
-  }
-
-  export type PictureUpdateWithWhereUniqueWithoutTaskInput = {
-    where: PictureWhereUniqueInput
-    data: XOR<PictureUpdateWithoutTaskInput, PictureUncheckedUpdateWithoutTaskInput>
-  }
-
-  export type PictureUpdateManyWithWhereWithoutTaskInput = {
-    where: PictureScalarWhereInput
-    data: XOR<PictureUpdateManyMutationInput, PictureUncheckedUpdateManyWithoutTaskInput>
-  }
-
-  export type PictureScalarWhereInput = {
-    AND?: PictureScalarWhereInput | PictureScalarWhereInput[]
-    OR?: PictureScalarWhereInput[]
-    NOT?: PictureScalarWhereInput | PictureScalarWhereInput[]
-    id?: IntFilter<"Picture"> | number
-    createdAt?: DateTimeFilter<"Picture"> | Date | string
-    updatedAt?: DateTimeFilter<"Picture"> | Date | string
-    data?: BytesFilter<"Picture"> | Buffer
-    taskId?: IntFilter<"Picture"> | number
-  }
-
   export type TaskCreateWithoutLabelsInput = {
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     dueDate?: Date | string | null
     completed?: boolean
     priority?: $Enums.TaskPriority | null
@@ -9828,13 +8574,12 @@ export namespace Prisma {
     updatedAt?: Date | string
     group: GroupCreateNestedOneWithoutTasksInput
     subTasks?: SubtaskCreateNestedManyWithoutTaskInput
-    pictures?: PictureCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutLabelsInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     dueDate?: Date | string | null
     completed?: boolean
     priority?: $Enums.TaskPriority | null
@@ -9842,12 +8587,37 @@ export namespace Prisma {
     updatedAt?: Date | string
     groupId: number
     subTasks?: SubtaskUncheckedCreateNestedManyWithoutTaskInput
-    pictures?: PictureUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutLabelsInput = {
     where: TaskWhereUniqueInput
     create: XOR<TaskCreateWithoutLabelsInput, TaskUncheckedCreateWithoutLabelsInput>
+  }
+
+  export type UsersCreateWithoutLabelsInput = {
+    email: string
+    password: string
+    fname: string
+    lname: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    groups?: GroupCreateNestedManyWithoutUserInput
+  }
+
+  export type UsersUncheckedCreateWithoutLabelsInput = {
+    id?: number
+    email: string
+    password: string
+    fname: string
+    lname: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    groups?: GroupUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UsersCreateOrConnectWithoutLabelsInput = {
+    where: UsersWhereUniqueInput
+    create: XOR<UsersCreateWithoutLabelsInput, UsersUncheckedCreateWithoutLabelsInput>
   }
 
   export type TaskUpsertWithWhereUniqueWithoutLabelsInput = {
@@ -9866,9 +8636,41 @@ export namespace Prisma {
     data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutLabelsInput>
   }
 
+  export type UsersUpsertWithoutLabelsInput = {
+    update: XOR<UsersUpdateWithoutLabelsInput, UsersUncheckedUpdateWithoutLabelsInput>
+    create: XOR<UsersCreateWithoutLabelsInput, UsersUncheckedCreateWithoutLabelsInput>
+    where?: UsersWhereInput
+  }
+
+  export type UsersUpdateToOneWithWhereWithoutLabelsInput = {
+    where?: UsersWhereInput
+    data: XOR<UsersUpdateWithoutLabelsInput, UsersUncheckedUpdateWithoutLabelsInput>
+  }
+
+  export type UsersUpdateWithoutLabelsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    fname?: StringFieldUpdateOperationsInput | string
+    lname?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    groups?: GroupUpdateManyWithoutUserNestedInput
+  }
+
+  export type UsersUncheckedUpdateWithoutLabelsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    fname?: StringFieldUpdateOperationsInput | string
+    lname?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    groups?: GroupUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type TaskCreateWithoutSubTasksInput = {
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     dueDate?: Date | string | null
     completed?: boolean
     priority?: $Enums.TaskPriority | null
@@ -9876,13 +8678,12 @@ export namespace Prisma {
     updatedAt?: Date | string
     group: GroupCreateNestedOneWithoutTasksInput
     labels?: LabelCreateNestedManyWithoutTasksInput
-    pictures?: PictureCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutSubTasksInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     dueDate?: Date | string | null
     completed?: boolean
     priority?: $Enums.TaskPriority | null
@@ -9890,7 +8691,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     groupId: number
     labels?: LabelUncheckedCreateNestedManyWithoutTasksInput
-    pictures?: PictureUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutSubTasksInput = {
@@ -9910,8 +8710,8 @@ export namespace Prisma {
   }
 
   export type TaskUpdateWithoutSubTasksInput = {
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -9919,13 +8719,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     group?: GroupUpdateOneRequiredWithoutTasksNestedInput
     labels?: LabelUpdateManyWithoutTasksNestedInput
-    pictures?: PictureUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutSubTasksInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -9933,90 +8732,27 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groupId?: IntFieldUpdateOperationsInput | number
     labels?: LabelUncheckedUpdateManyWithoutTasksNestedInput
-    pictures?: PictureUncheckedUpdateManyWithoutTaskNestedInput
-  }
-
-  export type TaskCreateWithoutPicturesInput = {
-    title?: string | null
-    description?: string | null
-    dueDate?: Date | string | null
-    completed?: boolean
-    priority?: $Enums.TaskPriority | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    group: GroupCreateNestedOneWithoutTasksInput
-    labels?: LabelCreateNestedManyWithoutTasksInput
-    subTasks?: SubtaskCreateNestedManyWithoutTaskInput
-  }
-
-  export type TaskUncheckedCreateWithoutPicturesInput = {
-    id?: number
-    title?: string | null
-    description?: string | null
-    dueDate?: Date | string | null
-    completed?: boolean
-    priority?: $Enums.TaskPriority | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    groupId: number
-    labels?: LabelUncheckedCreateNestedManyWithoutTasksInput
-    subTasks?: SubtaskUncheckedCreateNestedManyWithoutTaskInput
-  }
-
-  export type TaskCreateOrConnectWithoutPicturesInput = {
-    where: TaskWhereUniqueInput
-    create: XOR<TaskCreateWithoutPicturesInput, TaskUncheckedCreateWithoutPicturesInput>
-  }
-
-  export type TaskUpsertWithoutPicturesInput = {
-    update: XOR<TaskUpdateWithoutPicturesInput, TaskUncheckedUpdateWithoutPicturesInput>
-    create: XOR<TaskCreateWithoutPicturesInput, TaskUncheckedCreateWithoutPicturesInput>
-    where?: TaskWhereInput
-  }
-
-  export type TaskUpdateToOneWithWhereWithoutPicturesInput = {
-    where?: TaskWhereInput
-    data: XOR<TaskUpdateWithoutPicturesInput, TaskUncheckedUpdateWithoutPicturesInput>
-  }
-
-  export type TaskUpdateWithoutPicturesInput = {
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    group?: GroupUpdateOneRequiredWithoutTasksNestedInput
-    labels?: LabelUpdateManyWithoutTasksNestedInput
-    subTasks?: SubtaskUpdateManyWithoutTaskNestedInput
-  }
-
-  export type TaskUncheckedUpdateWithoutPicturesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    groupId?: IntFieldUpdateOperationsInput | number
-    labels?: LabelUncheckedUpdateManyWithoutTasksNestedInput
-    subTasks?: SubtaskUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type GroupCreateManyUserInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LabelCreateManyUserInput = {
+    id?: number
+    name: string
+    color: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type GroupUpdateWithoutUserInput = {
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUpdateManyWithoutGroupNestedInput
@@ -10024,8 +8760,8 @@ export namespace Prisma {
 
   export type GroupUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUncheckedUpdateManyWithoutGroupNestedInput
@@ -10033,16 +8769,41 @@ export namespace Prisma {
 
   export type GroupUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LabelUpdateWithoutUserInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tasks?: TaskUpdateManyWithoutLabelsNestedInput
+  }
+
+  export type LabelUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tasks?: TaskUncheckedUpdateManyWithoutLabelsNestedInput
+  }
+
+  export type LabelUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskCreateManyGroupInput = {
     id?: number
-    title?: string | null
-    description?: string | null
+    title: string
+    description: string
     dueDate?: Date | string | null
     completed?: boolean
     priority?: $Enums.TaskPriority | null
@@ -10051,8 +8812,8 @@ export namespace Prisma {
   }
 
   export type TaskUpdateWithoutGroupInput = {
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -10060,13 +8821,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     labels?: LabelUpdateManyWithoutTasksNestedInput
     subTasks?: SubtaskUpdateManyWithoutTaskNestedInput
-    pictures?: PictureUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutGroupInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -10074,13 +8834,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     labels?: LabelUncheckedUpdateManyWithoutTasksNestedInput
     subTasks?: SubtaskUncheckedUpdateManyWithoutTaskNestedInput
-    pictures?: PictureUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutGroupInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -10091,16 +8850,10 @@ export namespace Prisma {
   export type SubtaskCreateManyTaskInput = {
     id?: number
     title: string
+    description: string
     completed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-  }
-
-  export type PictureCreateManyTaskInput = {
-    id?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    data: Buffer
   }
 
   export type LabelUpdateWithoutTasksInput = {
@@ -10108,6 +8861,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UsersUpdateOneRequiredWithoutLabelsNestedInput
   }
 
   export type LabelUncheckedUpdateWithoutTasksInput = {
@@ -10116,6 +8870,7 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
   }
 
   export type LabelUncheckedUpdateManyWithoutTasksInput = {
@@ -10124,10 +8879,12 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
   }
 
   export type SubtaskUpdateWithoutTaskInput = {
     title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10136,6 +8893,7 @@ export namespace Prisma {
   export type SubtaskUncheckedUpdateWithoutTaskInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10144,34 +8902,15 @@ export namespace Prisma {
   export type SubtaskUncheckedUpdateManyWithoutTaskInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     completed?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PictureUpdateWithoutTaskInput = {
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
-  }
-
-  export type PictureUncheckedUpdateWithoutTaskInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
-  }
-
-  export type PictureUncheckedUpdateManyWithoutTaskInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
-  }
-
   export type TaskUpdateWithoutLabelsInput = {
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -10179,13 +8918,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     group?: GroupUpdateOneRequiredWithoutTasksNestedInput
     subTasks?: SubtaskUpdateManyWithoutTaskNestedInput
-    pictures?: PictureUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutLabelsInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -10193,13 +8931,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groupId?: IntFieldUpdateOperationsInput | number
     subTasks?: SubtaskUncheckedUpdateManyWithoutTaskNestedInput
-    pictures?: PictureUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutLabelsInput = {
     id?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completed?: BoolFieldUpdateOperationsInput | boolean
     priority?: NullableEnumTaskPriorityFieldUpdateOperationsInput | $Enums.TaskPriority | null
@@ -10249,10 +8986,6 @@ export namespace Prisma {
      * @deprecated Use SubtaskDefaultArgs instead
      */
     export type SubtaskArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = SubtaskDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use PictureDefaultArgs instead
-     */
-    export type PictureArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = PictureDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany
