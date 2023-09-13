@@ -4,10 +4,18 @@ import {
   createLabelHandler,
   createSubTaskHandler,
   createTaskHandler,
+  deleteGroupHandler,
+  deleteLabelHandler,
+  deleteSubTaskHandler,
+  deleteTaskHandler,
   getLabelHandler,
   getTaskHandler,
   loginHandler,
   registerHandler,
+  updateGroupHandler,
+  updateLabelHandler,
+  updateSubTaskHandler,
+  updateTaskHandler,
   } from "./toDoListAPI";
   
   export const AppRoutes = [
@@ -55,5 +63,45 @@ import {
       path: "/getLabel",
       method: "get",
       action: getLabelHandler,
+    },
+    {
+      path: "/deleteGroup",
+      method: "post",
+      action: deleteGroupHandler,
+    },
+    {
+      path: "/deleteTask",
+      method: "post",
+      action: deleteTaskHandler,
+    },
+    {
+      path: "/deleteSubTask",
+      method: "get",
+      action: deleteSubTaskHandler,
+    },
+    {
+      path: "/deleteLabel",
+      method: "post",
+      action: deleteLabelHandler,
+    },
+    {
+      path: "/updateGroup",
+      method: "post",
+      action: updateGroupHandler,
+    },
+    {
+      path: "/updateTask",
+      method: "post",
+      action: updateTaskHandler,
+    },
+    {
+      path: "/updateSubTask",
+      method: "post",
+      action: updateSubTaskHandler,
+    },
+    {
+      path: "/updateLabel",
+      method: "post",
+      action: updateLabelHandler,
     },
   ];

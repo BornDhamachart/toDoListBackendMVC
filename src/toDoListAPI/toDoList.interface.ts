@@ -64,3 +64,46 @@ export const createLabelCodec = t.type({
 });
 
 export interface ICreateLabel extends t.TypeOf<typeof createLabelCodec> {}
+
+export const deleteCodec = t.type({
+  id: t.number,
+});
+
+export interface IDelete extends t.TypeOf<typeof deleteCodec> {}
+
+export const updateGroupCodec = t.type({
+  groupId: t.number,
+  title: t.string,
+  description: t.string,
+});
+
+export interface IUpdateGroup extends t.TypeOf<typeof updateGroupCodec> {}
+
+export const updateTaskCodec = t.type({
+  taskId: t.number,
+  title: t.string,
+  description: t.string,
+  dueDate:t.string,
+  completed: t.string,
+  priority: t.keyof(TaskPriority),
+  groupId: t.number,
+});
+
+export interface IUpdateTask extends t.TypeOf<typeof updateTaskCodec> {}
+
+export const updateSubTaskCodec = t.type({
+  subTaskId: t.number,
+  title: t.string,
+  description: t.string,
+  completed: t.string,
+});
+
+export interface IUpdateSubTask extends t.TypeOf<typeof updateSubTaskCodec> {}
+
+export const updateLabelCodec = t.type({
+  labelId: t.number,
+  name: t.string,
+  color: t.string,
+});
+
+export interface IUpdateLabel extends t.TypeOf<typeof updateLabelCodec> {}

@@ -1,5 +1,5 @@
 import { PrismaClient } from "../../prisma/client";
-import { IRegister, ILogin, ICreateGroup, ICreateTask, ICreateSubTask, ICreateLabel } from "./toDoList.interface";
+import { IRegister, ILogin, ICreateGroup, ICreateTask, ICreateSubTask, ICreateLabel, IDelete, IUpdateLabel, IUpdateSubTask, IUpdateTask, IUpdateGroup } from "./toDoList.interface";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dayjs from 'dayjs';
@@ -185,5 +185,134 @@ export const getLabel = async (filteredQueryParams : any) => {
   } catch (e) {
     console.error(e);
     throw new Error("GetTask failed");
+  }
+};
+
+//DELETE
+export const deleteGroup = async (args: IDelete) => {
+  try {
+    await prisma.group.delete({
+      where: {
+        id: args.id,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("DeleteGroup failed");
+  }
+};
+
+export const deleteTask = async (args: IDelete) => {
+  try {
+    await prisma.task.delete({
+      where: {
+        id: args.id,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("DeleteTask failed");
+  }
+};
+
+export const deleteSubTask = async (args: IDelete) => {
+  try {
+    await prisma.subtask.delete({
+      where: {
+        id: args.id,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("DeleteSubTask failed");
+  }
+};
+
+export const deleteLabel = async (args: IDelete) => {
+  try {
+    await prisma.label.delete({
+      where: {
+        id: args.id,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("DeleteSubTask failed");
+  }
+};
+
+
+//UPDATE
+export const updateGroup = async (args: IUpdateGroup) => {
+  try {
+    await prisma.group.update({
+      where: {
+        id: args.groupId,
+      },
+      data : {
+        title: args.title,
+        description: args.description
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("DeleteGroup failed");
+  }
+};
+
+export const updateTask = async (args: IUpdateTask) => {
+  const inputDueDate = args.dueDate === "" ? null : `${args.dueDate}T00:00:00Z`
+  try {
+    await prisma.task.update({
+      where: {
+        id: args.taskId,
+      },
+      data : {
+        title: args.title,
+        description: args.description,
+        dueDate: inputDueDate,
+        completed: args.completed === "Y" ? true : false,
+        priority: args.priority,
+        groupId : args.groupId
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("DeleteTask failed");
+  }
+};
+
+export const updateSubTask = async (args: IUpdateSubTask) => {
+  try {
+    await prisma.subtask.update({
+      where: {
+        id: args.subTaskId,
+      },
+      data : {
+        title: args.title,
+        description: args.description,
+        completed: args.completed === "Y" ? true : false,
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("DeleteSubTask failed");
+  }
+};
+
+export const updateLabel = async (args: IUpdateLabel) => {
+  try {
+    await prisma.label.update({
+      where: {
+        id: args.labelId,
+      },
+      data : {
+        name: args.name,
+        color: args.color,
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error("DeleteSubTask failed");
   }
 };

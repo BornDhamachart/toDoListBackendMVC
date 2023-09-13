@@ -17,7 +17,7 @@ model Group {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   userId      Int
-  user        Users    @relation(fields: [userId], references: [id])
+  user        Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   tasks       Task[]
 }
 
@@ -31,7 +31,7 @@ model Task {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   groupId     Int
-  group       Group         @relation(fields: [groupId], references: [id])
+  group       Group         @relation(fields: [groupId], references: [id], onDelete: Cascade)
   labels      Label[]
   subTasks    Subtask[]
 }
@@ -43,19 +43,19 @@ model Label {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tasks     Task[]
-  userId      Int
-  user        Users    @relation(fields: [userId], references: [id])
+  userId    Int
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Subtask {
-  id        Int      @id @default(autoincrement())
-  title     String
+  id          Int      @id @default(autoincrement())
+  title       String
   description String
-  completed Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  taskId    Int
-  task      Task     @relation(fields: [taskId], references: [id])
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  taskId      Int
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
 
 enum TaskPriority {

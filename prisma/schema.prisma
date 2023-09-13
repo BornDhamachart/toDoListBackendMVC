@@ -4,9 +4,10 @@ datasource db {
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "darwin-arm64", "debian-openssl-1.1.x"]
-  output        = "../prisma/client"
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "darwin-arm64", "debian-openssl-1.1.x"]
+  output          = "../prisma/client"
+  previewFeatures = ["referentialActions"]
 }
 model Users {
   id        Int      @id @default(autoincrement())
@@ -27,7 +28,7 @@ model Group {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   userId      Int
-  user        Users    @relation(fields: [userId], references: [id])
+  user        Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   tasks       Task[]
 }
 
@@ -41,7 +42,7 @@ model Task {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   groupId     Int
-  group       Group         @relation(fields: [groupId], references: [id])
+  group       Group         @relation(fields: [groupId], references: [id], onDelete: Cascade)
   labels      Label[]
   subTasks    Subtask[]
 }
@@ -54,7 +55,7 @@ model Label {
   updatedAt DateTime @updatedAt
   tasks     Task[]
   userId    Int
-  user      Users    @relation(fields: [userId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Subtask {
@@ -65,7 +66,7 @@ model Subtask {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   taskId      Int
-  task        Task     @relation(fields: [taskId], references: [id])
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
 
 enum TaskPriority {

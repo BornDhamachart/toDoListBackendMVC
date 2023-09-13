@@ -17,6 +17,14 @@ import {
   createLabel,
   getTask,
   getLabel,
+  updateLabel,
+  updateSubTask,
+  updateTask,
+  updateGroup,
+  deleteLabel,
+  deleteSubTask,
+  deleteTask,
+  deleteGroup,
 } from "./toDoList.resolver";
 
 export const registerHandler = async (
@@ -186,3 +194,148 @@ export const getTaskHandler = async (
         res.status(500).json({ error: String(e) });
       }
     }
+
+    export const deleteGroupHandler = async (
+      req: Request,
+      res: Response
+    ) => {
+      const args = req?.body;
+    
+      if (createLabelCodec.decode(args)._tag === "Right") {
+        try {
+          const result = await deleteGroup(args);
+          res.status(200).json({status : "ok"});
+        } catch (e) {
+          res.status(500).json({ error: String(e) });
+        }
+      } else {
+        res.status(500).json({ error: "Error invalid codec" });
+      }
+    };
+
+    export const deleteTaskHandler = async (
+      req: Request,
+      res: Response
+    ) => {
+      const args = req?.body;
+    
+      if (createLabelCodec.decode(args)._tag === "Right") {
+        try {
+          const result = await deleteTask(args);
+          res.status(200).json({status : "ok"});
+        } catch (e) {
+          res.status(500).json({ error: String(e) });
+        }
+      } else {
+        res.status(500).json({ error: "Error invalid codec" });
+      }
+    };
+
+    export const deleteSubTaskHandler = async (
+      req: Request,
+      res: Response
+    ) => {
+      const args = req?.body;
+    
+      if (createLabelCodec.decode(args)._tag === "Right") {
+        try {
+          const result = await deleteSubTask(args);
+          res.status(200).json({status : "ok"});
+        } catch (e) {
+          res.status(500).json({ error: String(e) });
+        }
+      } else {
+        res.status(500).json({ error: "Error invalid codec" });
+      }
+    };
+
+    export const deleteLabelHandler = async (
+      req: Request,
+      res: Response
+    ) => {
+      const args = req?.body;
+    
+      if (createLabelCodec.decode(args)._tag === "Right") {
+        try {
+          const result = await deleteLabel(args);
+          res.status(200).json({status : "ok"});
+        } catch (e) {
+          res.status(500).json({ error: String(e) });
+        }
+      } else {
+        res.status(500).json({ error: "Error invalid codec" });
+      }
+    };
+
+    export const updateGroupHandler = async (
+      req: Request,
+      res: Response
+    ) => {
+      const args = req?.body;
+    
+      if (createLabelCodec.decode(args)._tag === "Right") {
+        try {
+          const result = await updateGroup(args);
+          res.status(200).json({status : "ok"});
+        } catch (e) {
+          res.status(500).json({ error: String(e) });
+        }
+      } else {
+        res.status(500).json({ error: "Error invalid codec" });
+      }
+    };
+
+    export const updateTaskHandler = async (
+      req: Request,
+      res: Response
+    ) => {
+      const args = req?.body;
+    
+      if (createLabelCodec.decode(args)._tag === "Right") {
+        try {
+          const result = await updateTask(args);
+          res.status(200).json({status : "ok"});
+        } catch (e) {
+          res.status(500).json({ error: String(e) });
+        }
+      } else {
+        res.status(500).json({ error: "Error invalid codec" });
+      }
+    };
+
+    export const updateSubTaskHandler = async (
+      req: Request,
+      res: Response
+    ) => {
+      const args = req?.body;
+    
+      if (createLabelCodec.decode(args)._tag === "Right") {
+        try {
+          const result = await updateSubTask(args);
+          res.status(200).json({status : "ok"});
+        } catch (e) {
+          res.status(500).json({ error: String(e) });
+        }
+      } else {
+        res.status(500).json({ error: "Error invalid codec" });
+      }
+    };
+
+
+    export const updateLabelHandler = async (
+      req: Request,
+      res: Response
+    ) => {
+      const args = req?.body;
+    
+      if (createLabelCodec.decode(args)._tag === "Right") {
+        try {
+          const result = await updateLabel(args);
+          res.status(200).json({status : "ok"});
+        } catch (e) {
+          res.status(500).json({ error: String(e) });
+        }
+      } else {
+        res.status(500).json({ error: "Error invalid codec" });
+      }
+    };
