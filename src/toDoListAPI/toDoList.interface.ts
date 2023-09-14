@@ -33,13 +33,7 @@ export interface ILogin extends t.TypeOf<typeof loginCodec> {}
 export const createGroupCodec = t.type({
   title: t.string,
   description: t.string,
-  userId: t.number,
 });
-
-export interface Label {
-  name: string;
-  color: string;
-}
 
 export interface ICreateGroup extends t.TypeOf<typeof createGroupCodec> {}
 
