@@ -2,7 +2,7 @@
 //     getTest1
 //   } from "./loginTemplate.resolver";
   
-//   describe("Shabudule", () => {
+//   describe("Test", () => {
 //     test("getTest1", async () => {
 //       const data = {
 //         name:"xxx"
