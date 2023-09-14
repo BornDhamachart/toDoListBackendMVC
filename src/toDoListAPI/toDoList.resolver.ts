@@ -2,17 +2,12 @@ import { PrismaClient } from "../../prisma/client";
 import { IRegister, ILogin, ICreateGroup, ICreateTask, ICreateSubTask, ICreateLabel, IDelete, IUpdateLabel, IUpdateSubTask, IUpdateTask, IUpdateGroup } from "./toDoList.interface";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import dayjs from 'dayjs';
-import { argv } from "process";
 
 export const prisma = new PrismaClient();
 
-const saltRounds: number = 10;
-const secret = "secretTest";
-
 export const register = async (args: IRegister) => {
   try {
-    const hashPassword = await bcrypt.hash(args.password, saltRounds);
+    const hashPassword = await bcrypt.hash(args.password, Number(process.env.SALT_ROUNDS));
 
     await prisma.users.create({
       data: {
@@ -44,10 +39,10 @@ export const login = async (args: ILogin) => {
 
     if (isLogin) {
       const token = jwt.sign(
-        { email: user[0]?.email, fullname: user[0]?.fname },
-        secret,
+        { email: user[0]?.email, fullname: user[0]?.fname, userId: user[0]?.id },
+        process.env.SECRET_KEY as string,
         {
-          expiresIn: "1hr",
+          expiresIn: "6hr",
         }
       );
 
@@ -64,7 +59,7 @@ export const login = async (args: ILogin) => {
 export const authentication = async (authHeader: string) => {
   try {
     const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, secret);
+    const decoded = jwt.verify(token,  process.env.SECRET_KEY as string);
     return decoded;
   } catch (e) {
     console.error(e);
@@ -73,13 +68,13 @@ export const authentication = async (authHeader: string) => {
 };
 
 //CREATE
-export const createGroup = async (args: ICreateGroup) => {
+export const createGroup = async (args: ICreateGroup, userId:number) => {
   try {
     await prisma.group.create({
       data: {
         title: args.title,
         description: args.description,
-        user: { connect: { id: args.userId } },
+        user: { connect: { id: userId } },
       },
     });
   } catch (e) {
@@ -88,7 +83,7 @@ export const createGroup = async (args: ICreateGroup) => {
   }
 };
 
-export const createTask = async (args: ICreateTask) => {
+export const createTask = async (args: ICreateTask, userId:number) => {
   const inputDueDate = args.dueDate === "" ? null : `${args.dueDate}T00:00:00Z`
   try {
     await prisma.task.create({
@@ -109,7 +104,7 @@ export const createTask = async (args: ICreateTask) => {
   }
 };
 
-export const createSubTask = async (args: ICreateSubTask) => {
+export const createSubTask = async (args: ICreateSubTask, userId:number) => {
   try {
     await prisma.subtask.create({
       data: {
@@ -124,13 +119,13 @@ export const createSubTask = async (args: ICreateSubTask) => {
   }
 };
 
-export const createLabel = async (args: ICreateLabel) => {
+export const createLabel = async (args: ICreateLabel, userId:number) => {
   try {
     await prisma.label.create({
       data: {
         name: args.name,
         color: args.color,
-        user : { connect: { id: args.userId } },
+        user : { connect: { id: userId } },
       },
     });
   } catch (e) {
@@ -140,7 +135,7 @@ export const createLabel = async (args: ICreateLabel) => {
 };
 
 //READ
-export const getTask = async (filteredQueryParams : any) => {
+export const getTask = async (filteredQueryParams : any, userId:number) => {
   console.log("filteredQueryParams",filteredQueryParams)
   try {
      const tasks = await prisma.task.findMany({
@@ -158,7 +153,7 @@ export const getTask = async (filteredQueryParams : any) => {
         priority :  filteredQueryParams?.priority,
         groupId : filteredQueryParams?.groupId,
         group: {
-          userId: Number(filteredQueryParams?.userId), //get UserID from token
+          userId: userId,
         },
       },
       include : {
@@ -173,12 +168,12 @@ export const getTask = async (filteredQueryParams : any) => {
   }
 };
 
-export const getLabel = async (filteredQueryParams : any) => {
+export const getLabel = async (filteredQueryParams : any, userId:number) => {
   console.log("filteredQueryParams",filteredQueryParams)
   try {
      const tasks = await prisma.label.findMany({
       where: {
-        userId : Number(filteredQueryParams?.userId)// get from token
+        userId : userId
       },
     });
     return tasks;
@@ -189,7 +184,7 @@ export const getLabel = async (filteredQueryParams : any) => {
 };
 
 //DELETE
-export const deleteGroup = async (args: IDelete) => {
+export const deleteGroup = async (args: IDelete, userId:number) => {
   try {
     await prisma.group.delete({
       where: {
@@ -202,7 +197,7 @@ export const deleteGroup = async (args: IDelete) => {
   }
 };
 
-export const deleteTask = async (args: IDelete) => {
+export const deleteTask = async (args: IDelete, userId:number) => {
   try {
     await prisma.task.delete({
       where: {
@@ -215,7 +210,7 @@ export const deleteTask = async (args: IDelete) => {
   }
 };
 
-export const deleteSubTask = async (args: IDelete) => {
+export const deleteSubTask = async (args: IDelete, userId:number) => {
   try {
     await prisma.subtask.delete({
       where: {
@@ -228,7 +223,7 @@ export const deleteSubTask = async (args: IDelete) => {
   }
 };
 
-export const deleteLabel = async (args: IDelete) => {
+export const deleteLabel = async (args: IDelete, userId:number) => {
   try {
     await prisma.label.delete({
       where: {
@@ -243,7 +238,7 @@ export const deleteLabel = async (args: IDelete) => {
 
 
 //UPDATE
-export const updateGroup = async (args: IUpdateGroup) => {
+export const updateGroup = async (args: IUpdateGroup, userId:number) => {
   try {
     await prisma.group.update({
       where: {
@@ -260,7 +255,7 @@ export const updateGroup = async (args: IUpdateGroup) => {
   }
 };
 
-export const updateTask = async (args: IUpdateTask) => {
+export const updateTask = async (args: IUpdateTask, userId:number) => {
   const inputDueDate = args.dueDate === "" ? null : `${args.dueDate}T00:00:00Z`
   try {
     await prisma.task.update({
@@ -282,7 +277,7 @@ export const updateTask = async (args: IUpdateTask) => {
   }
 };
 
-export const updateSubTask = async (args: IUpdateSubTask) => {
+export const updateSubTask = async (args: IUpdateSubTask, userId:number) => {
   try {
     await prisma.subtask.update({
       where: {
@@ -300,7 +295,7 @@ export const updateSubTask = async (args: IUpdateSubTask) => {
   }
 };
 
-export const updateLabel = async (args: IUpdateLabel) => {
+export const updateLabel = async (args: IUpdateLabel, userId:number) => {
   try {
     await prisma.label.update({
       where: {

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import {
   registerCodec,
   loginCodec,
@@ -6,7 +6,13 @@ import {
   createTaskCodec,
   createSubTaskCodec,
   createLabelCodec,
-  } from "./toDoList.interface";
+  deleteCodec,
+  updateGroupCodec,
+  updateTaskCodec,
+  updateSubTaskCodec,
+  updateLabelCodec,
+  CustomRequest,
+} from "./toDoList.interface";
 import {
   register,
   login,
@@ -26,32 +32,30 @@ import {
   deleteTask,
   deleteGroup,
 } from "./toDoList.resolver";
+import { JwtPayload } from "jsonwebtoken";
 
-export const registerHandler = async (
-    req: Request,
-    res: Response
-  ) => {
-    const args = req?.body;
-  
-    if (registerCodec.decode(args)._tag === "Right") {
-      try {
-        const result = await register(args);
-        res.status(200).json({status : "ok"});
-      } catch (e) {
-        res.status(500).json({ error: String(e) });
-      }
-    } else {
-      res.status(500).json({ error: "Error invalid codec" });
+export const registerHandler = async (req: Request, res: Response) => {
+  const args = req?.body;
+
+  if (registerCodec.decode(args)._tag === "Right") {
+    try {
+      const result = await register(args);
+      res.status(200).json({ status: "ok" });
+    } catch (e) {
+      res.status(500).json({ error: String(e) });
     }
-  };
-  
+  } else {
+    res.status(500).json({ error: "Error invalid codec" });
+  }
+};
+
 export const loginHandler = async (req: Request, res: Response) => {
   const args = req?.body;
 
   if (loginCodec.decode(args)._tag === "Right") {
     try {
       const result = await login(args);
-      res.status(200).json({ status: "ok", token : result});
+      res.status(200).json({ status: "ok", token: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -61,30 +65,52 @@ export const loginHandler = async (req: Request, res: Response) => {
 };
 
 export const authenticationHandler = async (req: Request, res: Response) => {
-  const authHeader = req?.headers['authorization'];
+  const authHeader = req?.headers["authorization"];
 
-  if (authHeader && authHeader.startsWith('Bearer ')){
+  if (authHeader && authHeader.startsWith("Bearer ")) {
     try {
       const result = await authentication(authHeader);
       res.status(200).json({ status: "ok", result: result });
     } catch (e) {
-      res.status(500).json({ error: String(e) });
+      res.status(401).json({ error: String(e) });
     }
   } else {
-    res.status(500).json({ error: "Invalid or missing Authorization header" });
+    res.status(401).json({ error: "Invalid or missing Authorization header" });
   }
 };
 
-export const createGroupHandler = async (
-  req: Request,
-  res: Response
+export const authenticationApiHandler = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
 ) => {
+  const authHeader = req?.headers["authorization"];
+
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    try {
+      const decodedUser = await authentication(authHeader);
+      if (typeof decodedUser === "object" && "userId" in decodedUser) {
+        req.userId = (decodedUser as JwtPayload).userId;
+        next();
+      } else {
+        throw new Error("Invalid user data");
+      }
+    } catch (e) {
+      res.status(401).json({ error: String(e) });
+    }
+  } else {
+    res.status(401).json({ error: "Invalid or missing Authorization header" });
+  }
+};
+
+export const createGroupHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
+  const userId = req.userId;
 
   if (createGroupCodec.decode(args)._tag === "Right") {
     try {
-      const result = await createGroup(args);
-      res.status(200).json({status : "ok"});
+      const result = await createGroup(args, userId);
+      res.status(200).json({ status: "ok" });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -93,16 +119,14 @@ export const createGroupHandler = async (
   }
 };
 
-export const createTaskHandler = async (
-  req: Request,
-  res: Response
-) => {
+export const createTaskHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
+  const userId = req.userId;
 
   if (createTaskCodec.decode(args)._tag === "Right") {
     try {
-      const result = await createTask(args);
-      res.status(200).json({status : "ok"});
+      const result = await createTask(args, userId);
+      res.status(200).json({ status: "ok" });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -111,16 +135,14 @@ export const createTaskHandler = async (
   }
 };
 
-export const createSubTaskHandler = async (
-  req: Request,
-  res: Response
-) => {
+export const createSubTaskHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
+  const userId = req.userId;
 
   if (createSubTaskCodec.decode(args)._tag === "Right") {
     try {
-      const result = await createSubTask(args);
-      res.status(200).json({status : "ok"});
+      const result = await createSubTask(args, userId);
+      res.status(200).json({ status: "ok" });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -129,16 +151,14 @@ export const createSubTaskHandler = async (
   }
 };
 
-export const createLabelHandler = async (
-  req: Request,
-  res: Response
-) => {
+export const createLabelHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
+  const userId = req.userId;
 
   if (createLabelCodec.decode(args)._tag === "Right") {
     try {
-      const result = await createLabel(args);
-      res.status(200).json({status : "ok"});
+      const result = await createLabel(args, userId);
+      res.status(200).json({ status: "ok" });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -147,195 +167,172 @@ export const createLabelHandler = async (
   }
 };
 
-export const getTaskHandler = async (
-  req: Request,
-  res: Response
-) => {
+export const getTaskHandler = async (req: CustomRequest, res: Response) => {
   const queryParams = req?.query;
-  console.log("queryParams", queryParams)
+  const userId = req.userId;
 
-  const filteredQueryParams= Object.keys(queryParams)
-  .filter(key => queryParams[key] !== "")
-  .reduce((result:any, key:any) => {
-    result[key] = queryParams[key];
-    return result;
-  }, {});
-
-  console.log("filteredQueryParams", filteredQueryParams)
-
-    try {
-      const result = await getTask(filteredQueryParams);
-      res.status(200).json({status : "ok", result : result});
-    } catch (e) {
-      res.status(500).json({ error: String(e) });
-    }
-  }
-
-  export const getLabelHandler = async (
-    req: Request,
-    res: Response
-  ) => {
-    const queryParams = req?.query;
-    console.log("queryParams", queryParams)
-  
-    const filteredQueryParams= Object.keys(queryParams)
-    .filter(key => queryParams[key] !== "")
-    .reduce((result:any, key:any) => {
+  const filteredQueryParams = Object.keys(queryParams)
+    .filter((key) => queryParams[key] !== "")
+    .reduce((result: any, key: any) => {
       result[key] = queryParams[key];
       return result;
     }, {});
-  
-    console.log("filteredQueryParams", filteredQueryParams)
-  
-      try {
-        const result = await getLabel(filteredQueryParams);
-        res.status(200).json({status : "ok", result : result});
-      } catch (e) {
-        res.status(500).json({ error: String(e) });
-      }
+
+  console.log("filteredQueryParams", filteredQueryParams);
+
+  try {
+    const result = await getTask(filteredQueryParams, userId);
+    res.status(200).json({ status: "ok", result: result });
+  } catch (e) {
+    res.status(500).json({ error: String(e) });
+  }
+};
+
+export const getLabelHandler = async (req: CustomRequest, res: Response) => {
+  const queryParams = req?.query;
+  const userId = req.userId;
+
+  const filteredQueryParams = Object.keys(queryParams)
+    .filter((key) => queryParams[key] !== "")
+    .reduce((result: any, key: any) => {
+      result[key] = queryParams[key];
+      return result;
+    }, {});
+
+  console.log("filteredQueryParams", filteredQueryParams);
+
+  try {
+    const result = await getLabel(filteredQueryParams, userId);
+    res.status(200).json({ status: "ok", result: result });
+  } catch (e) {
+    res.status(500).json({ error: String(e) });
+  }
+};
+
+export const deleteGroupHandler = async (req: CustomRequest, res: Response) => {
+  const args = req?.body;
+  const userId = req.userId;
+
+  if (deleteCodec.decode(args)._tag === "Right") {
+    try {
+      const result = await deleteGroup(args, userId);
+      res.status(200).json({ status: "ok" });
+    } catch (e) {
+      res.status(500).json({ error: String(e) });
     }
+  } else {
+    res.status(500).json({ error: "Error invalid codec" });
+  }
+};
 
-    export const deleteGroupHandler = async (
-      req: Request,
-      res: Response
-    ) => {
-      const args = req?.body;
-    
-      if (createLabelCodec.decode(args)._tag === "Right") {
-        try {
-          const result = await deleteGroup(args);
-          res.status(200).json({status : "ok"});
-        } catch (e) {
-          res.status(500).json({ error: String(e) });
-        }
-      } else {
-        res.status(500).json({ error: "Error invalid codec" });
-      }
-    };
+export const deleteTaskHandler = async (req: CustomRequest, res: Response) => {
+  const args = req?.body;
+  const userId = req.userId;
 
-    export const deleteTaskHandler = async (
-      req: Request,
-      res: Response
-    ) => {
-      const args = req?.body;
-    
-      if (createLabelCodec.decode(args)._tag === "Right") {
-        try {
-          const result = await deleteTask(args);
-          res.status(200).json({status : "ok"});
-        } catch (e) {
-          res.status(500).json({ error: String(e) });
-        }
-      } else {
-        res.status(500).json({ error: "Error invalid codec" });
-      }
-    };
+  if (deleteCodec.decode(args)._tag === "Right") {
+    try {
+      const result = await deleteTask(args, userId);
+      res.status(200).json({ status: "ok" });
+    } catch (e) {
+      res.status(500).json({ error: String(e) });
+    }
+  } else {
+    res.status(500).json({ error: "Error invalid codec" });
+  }
+};
 
-    export const deleteSubTaskHandler = async (
-      req: Request,
-      res: Response
-    ) => {
-      const args = req?.body;
-    
-      if (createLabelCodec.decode(args)._tag === "Right") {
-        try {
-          const result = await deleteSubTask(args);
-          res.status(200).json({status : "ok"});
-        } catch (e) {
-          res.status(500).json({ error: String(e) });
-        }
-      } else {
-        res.status(500).json({ error: "Error invalid codec" });
-      }
-    };
+export const deleteSubTaskHandler = async (req: CustomRequest, res: Response) => {
+  const args = req?.body;
+  const userId = req.userId;
 
-    export const deleteLabelHandler = async (
-      req: Request,
-      res: Response
-    ) => {
-      const args = req?.body;
-    
-      if (createLabelCodec.decode(args)._tag === "Right") {
-        try {
-          const result = await deleteLabel(args);
-          res.status(200).json({status : "ok"});
-        } catch (e) {
-          res.status(500).json({ error: String(e) });
-        }
-      } else {
-        res.status(500).json({ error: "Error invalid codec" });
-      }
-    };
+  if (deleteCodec.decode(args)._tag === "Right") {
+    try {
+      const result = await deleteSubTask(args, userId);
+      res.status(200).json({ status: "ok" });
+    } catch (e) {
+      res.status(500).json({ error: String(e) });
+    }
+  } else {
+    res.status(500).json({ error: "Error invalid codec" });
+  }
+};
 
-    export const updateGroupHandler = async (
-      req: Request,
-      res: Response
-    ) => {
-      const args = req?.body;
-    
-      if (createLabelCodec.decode(args)._tag === "Right") {
-        try {
-          const result = await updateGroup(args);
-          res.status(200).json({status : "ok"});
-        } catch (e) {
-          res.status(500).json({ error: String(e) });
-        }
-      } else {
-        res.status(500).json({ error: "Error invalid codec" });
-      }
-    };
+export const deleteLabelHandler = async (req: CustomRequest, res: Response) => {
+  const args = req?.body;
+  const userId = req.userId;
 
-    export const updateTaskHandler = async (
-      req: Request,
-      res: Response
-    ) => {
-      const args = req?.body;
-    
-      if (createLabelCodec.decode(args)._tag === "Right") {
-        try {
-          const result = await updateTask(args);
-          res.status(200).json({status : "ok"});
-        } catch (e) {
-          res.status(500).json({ error: String(e) });
-        }
-      } else {
-        res.status(500).json({ error: "Error invalid codec" });
-      }
-    };
+  if (deleteCodec.decode(args)._tag === "Right") {
+    try {
+      const result = await deleteLabel(args, userId);
+      res.status(200).json({ status: "ok" });
+    } catch (e) {
+      res.status(500).json({ error: String(e) });
+    }
+  } else {
+    res.status(500).json({ error: "Error invalid codec" });
+  }
+};
 
-    export const updateSubTaskHandler = async (
-      req: Request,
-      res: Response
-    ) => {
-      const args = req?.body;
-    
-      if (createLabelCodec.decode(args)._tag === "Right") {
-        try {
-          const result = await updateSubTask(args);
-          res.status(200).json({status : "ok"});
-        } catch (e) {
-          res.status(500).json({ error: String(e) });
-        }
-      } else {
-        res.status(500).json({ error: "Error invalid codec" });
-      }
-    };
+export const updateGroupHandler = async (req: CustomRequest, res: Response) => {
+  const args = req?.body;
+  const userId = req.userId;
 
+  if (updateGroupCodec.decode(args)._tag === "Right") {
+    try {
+      const result = await updateGroup(args, userId);
+      res.status(200).json({ status: "ok" });
+    } catch (e) {
+      res.status(500).json({ error: String(e) });
+    }
+  } else {
+    res.status(500).json({ error: "Error invalid codec" });
+  }
+};
 
-    export const updateLabelHandler = async (
-      req: Request,
-      res: Response
-    ) => {
-      const args = req?.body;
-    
-      if (createLabelCodec.decode(args)._tag === "Right") {
-        try {
-          const result = await updateLabel(args);
-          res.status(200).json({status : "ok"});
-        } catch (e) {
-          res.status(500).json({ error: String(e) });
-        }
-      } else {
-        res.status(500).json({ error: "Error invalid codec" });
-      }
-    };
+export const updateTaskHandler = async (req: CustomRequest, res: Response) => {
+  const args = req?.body;
+  const userId = req.userId;
+
+  if (updateTaskCodec.decode(args)._tag === "Right") {
+    try {
+      const result = await updateTask(args, userId);
+      res.status(200).json({ status: "ok" });
+    } catch (e) {
+      res.status(500).json({ error: String(e) });
+    }
+  } else {
+    res.status(500).json({ error: "Error invalid codec" });
+  }
+};
+
+export const updateSubTaskHandler = async (req: CustomRequest, res: Response) => {
+  const args = req?.body;
+  const userId = req.userId;
+
+  if (updateSubTaskCodec.decode(args)._tag === "Right") {
+    try {
+      const result = await updateSubTask(args, userId);
+      res.status(200).json({ status: "ok" });
+    } catch (e) {
+      res.status(500).json({ error: String(e) });
+    }
+  } else {
+    res.status(500).json({ error: "Error invalid codec" });
+  }
+};
+
+export const updateLabelHandler = async (req: CustomRequest, res: Response) => {
+  const args = req?.body;
+  const userId = req.userId;
+
+  if (updateLabelCodec.decode(args)._tag === "Right") {
+    try {
+      const result = await updateLabel(args, userId);
+      res.status(200).json({ status: "ok" });
+    } catch (e) {
+      res.status(500).json({ error: String(e) });
+    }
+  } else {
+    res.status(500).json({ error: "Error invalid codec" });
+  }
+};

@@ -17,7 +17,7 @@ import {
   updateSubTaskHandler,
   updateTaskHandler,
   } from "./toDoListAPI";
-  
+
   export const AppRoutes = [
     {
       path: "/register",
@@ -34,6 +34,9 @@ import {
       method: "post",
       action: authenticationHandler,
     },
+  ];
+  
+  export const ProtectedAppRoutes = [
     {
       path: "/createGroup",
       method: "post",
@@ -76,7 +79,7 @@ import {
     },
     {
       path: "/deleteSubTask",
-      method: "get",
+      method: "post",
       action: deleteSubTaskHandler,
     },
     {
@@ -105,3 +108,4 @@ import {
       action: updateLabelHandler,
     },
   ];
+

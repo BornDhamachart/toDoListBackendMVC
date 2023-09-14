@@ -1,6 +1,12 @@
 import * as t from "io-ts";
 import { optional } from "io-ts-extra";
 
+import { Request } from 'express';
+
+export interface CustomRequest extends Request {
+  userId: number;
+}
+
 enum TaskPriority {
   Critical = 'Critical',
   High = 'High',
@@ -44,7 +50,6 @@ export const createTaskCodec = t.type({
   priority: t.keyof(TaskPriority),
   groupId: t.number,
   labelId: t.array(t.number),
-  userId:t.number
 });
 
 export interface ICreateTask extends t.TypeOf<typeof createTaskCodec> {}
@@ -60,7 +65,6 @@ export interface ICreateSubTask extends t.TypeOf<typeof createSubTaskCodec> {}
 export const createLabelCodec = t.type({
   name: t.string,
   color: t.string,
-  userId: t.number
 });
 
 export interface ICreateLabel extends t.TypeOf<typeof createLabelCodec> {}
