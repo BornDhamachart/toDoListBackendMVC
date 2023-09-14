@@ -16,9 +16,8 @@ ProtectedAppRoutes.forEach((route) => {
   app[route.method as keyof Application](route.path, authenticationApiHandler, route.action);
 });
 
-
 app.get("/", (req, res) => {
-  res.send("Test API");
+  res.send("Test!!");
 });
 
 app.listen(3100, () => {
