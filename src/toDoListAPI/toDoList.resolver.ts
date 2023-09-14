@@ -52,7 +52,7 @@ export const login = async (args: ILogin) => {
     }
   } catch (e) {
     console.error(e);
-    throw new Error("Login failed");
+    throw new Error("Login error");
   }
 };
 
