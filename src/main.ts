@@ -22,7 +22,7 @@ ProtectedPermissionAppRoutes.forEach((route) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Test!!");
+  res.send("Hello!!");
 });
 
 app.listen(3100, () => {

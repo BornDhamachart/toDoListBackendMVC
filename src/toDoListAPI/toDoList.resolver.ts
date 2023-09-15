@@ -11,10 +11,10 @@ export const register = async (args: IRegister) => {
 
     await prisma.users.create({
       data: {
-        email: args.email,
+        email: args?.email,
         password: hashPassword,
-        fname: args.email,
-        lname: args.email,
+        fname: args?.fname,
+        lname: args?.lname,
       },
     });
   } catch (e) {
@@ -27,7 +27,7 @@ export const login = async (args: ILogin) => {
   try {
     const user = await prisma.users.findMany({
       where: {
-        email: args.email,
+        email: args?.email,
       },
     });
 
@@ -58,7 +58,7 @@ export const login = async (args: ILogin) => {
 
 export const authentication = async (authHeader: string) => {
   try {
-    const token = authHeader.split(" ")[1];
+    const token = authHeader?.split(" ")[1];
     const decoded = jwt.verify(token,  process.env.SECRET_KEY as string);
     return decoded;
   } catch (e) {
@@ -72,8 +72,8 @@ export const createGroup = async (args: ICreateGroup, userId:number) => {
   try {
     await prisma.group.create({
       data: {
-        title: args.title,
-        description: args.description,
+        title: args?.title,
+        description: args?.description,
         user: { connect: { id: userId } },
       },
     });
@@ -84,17 +84,17 @@ export const createGroup = async (args: ICreateGroup, userId:number) => {
 };
 
 export const createTask = async (args: ICreateTask, userId:number) => {
-  const inputDueDate = args.dueDate === "" ? null : `${args.dueDate}T00:00:00Z`
+  const inputDueDate = args?.dueDate === "" ? null : `${args?.dueDate}T00:00:00Z`
   try {
     await prisma.task.create({
       data: {
-        title: args.title,
-        description: args.description,
+        title: args?.title,
+        description: args?.description,
         dueDate : inputDueDate,
-        priority : args.priority,
-        group: { connect: { id: args.groupId } },
+        priority : args?.priority,
+        group: { connect: { id: args?.groupId } },
         labels: {
-          connect : args.labelId.map((r:number) => ({id : r}))
+          connect : args?.labelId.map((r:number) => ({id : r}))
         },
       },
     });
@@ -108,9 +108,9 @@ export const createSubTask = async (args: ICreateSubTask, userId:number) => {
   try {
     await prisma.subtask.create({
       data: {
-        title: args.title,
-        description: args.description,
-        task: { connect: { id: args.taskId } },
+        title: args?.title,
+        description: args?.description,
+        task: { connect: { id: args?.taskId } },
       },
     });
   } catch (e) {
@@ -123,8 +123,8 @@ export const createLabel = async (args: ICreateLabel, userId:number) => {
   try {
     await prisma.label.create({
       data: {
-        name: args.name,
-        color: args.color,
+        name: args?.name,
+        color: args?.color,
         user : { connect: { id: userId } },
       },
     });
@@ -186,7 +186,7 @@ export const deleteGroup = async (args: IDelete, userId:number) => {
   try {
     await prisma.group.delete({
       where: {
-        id: args.id,
+        id: args?.id,
       },
     });
   } catch (e) {
@@ -199,7 +199,7 @@ export const deleteTask = async (args: IDelete, userId:number) => {
   try {
     await prisma.task.delete({
       where: {
-        id: args.id,
+        id: args?.id,
       },
     });
   } catch (e) {
@@ -212,7 +212,7 @@ export const deleteSubTask = async (args: IDelete, userId:number) => {
   try {
     await prisma.subtask.delete({
       where: {
-        id: args.id,
+        id: args?.id,
       },
     });
   } catch (e) {
@@ -225,7 +225,7 @@ export const deleteLabel = async (args: IDelete, userId:number) => {
   try {
     await prisma.label.delete({
       where: {
-        id: args.id,
+        id: args?.id,
       },
     });
   } catch (e) {
@@ -240,11 +240,11 @@ export const updateGroup = async (args: IUpdateGroup, userId:number) => {
   try {
     await prisma.group.update({
       where: {
-        id: args.groupId,
+        id: args?.groupId,
       },
       data : {
-        title: args.title,
-        description: args.description
+        title: args?.title,
+        description: args?.description
       }
     });
   } catch (e) {
@@ -254,19 +254,19 @@ export const updateGroup = async (args: IUpdateGroup, userId:number) => {
 };
 
 export const updateTask = async (args: IUpdateTask, userId:number) => {
-  const inputDueDate = args.dueDate === "" ? null : `${args.dueDate}T00:00:00Z`
+  const inputDueDate = args?.dueDate === "" ? null : `${args?.dueDate}T00:00:00Z`
   try {
     await prisma.task.update({
       where: {
-        id: args.taskId,
+        id: args?.taskId,
       },
       data : {
-        title: args.title,
-        description: args.description,
+        title: args?.title,
+        description: args?.description,
         dueDate: inputDueDate,
-        completed: args.completed === "Y" ? true : false,
-        priority: args.priority,
-        groupId : args.groupId
+        completed: args?.completed === "Y" ? true : false,
+        priority: args?.priority,
+        groupId : args?.groupId
       }
     });
   } catch (e) {
@@ -279,12 +279,12 @@ export const updateSubTask = async (args: IUpdateSubTask, userId:number) => {
   try {
     await prisma.subtask.update({
       where: {
-        id: args.subTaskId,
+        id: args?.subTaskId,
       },
       data : {
-        title: args.title,
-        description: args.description,
-        completed: args.completed === "Y" ? true : false,
+        title: args?.title,
+        description: args?.description,
+        completed: args?.completed === "Y" ? true : false,
       }
     });
   } catch (e) {
@@ -297,11 +297,11 @@ export const updateLabel = async (args: IUpdateLabel, userId:number) => {
   try {
     await prisma.label.update({
       where: {
-        id: args.labelId,
+        id: args?.labelId,
       },
       data : {
-        name: args.name,
-        color: args.color,
+        name: args?.name,
+        color: args?.color,
       }
     });
   } catch (e) {
@@ -313,8 +313,7 @@ export const updateLabel = async (args: IUpdateLabel, userId:number) => {
 //ADMIN PERMISSION
 export const getUser = async () => {
   try {
-     const users = await prisma.users.findMany();
-    return users;
+    return await prisma.users.findMany();
   } catch (e) {
     console.error(e);
     throw new Error("GetUser failed");

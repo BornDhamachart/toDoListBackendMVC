@@ -81,7 +81,7 @@ export const authenticationHandler = async (req: Request, res: Response) => {
 
 export const createGroupHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   if (createGroupCodec.decode(args)._tag === "Right") {
     try {
@@ -97,7 +97,7 @@ export const createGroupHandler = async (req: CustomRequest, res: Response) => {
 
 export const createTaskHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   if (createTaskCodec.decode(args)._tag === "Right") {
     try {
@@ -129,7 +129,7 @@ export const createSubTaskHandler = async (req: CustomRequest, res: Response) =>
 
 export const createLabelHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   if (createLabelCodec.decode(args)._tag === "Right") {
     try {
@@ -145,7 +145,7 @@ export const createLabelHandler = async (req: CustomRequest, res: Response) => {
 
 export const getTaskHandler = async (req: CustomRequest, res: Response) => {
   const queryParams = req?.query;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   const filteredQueryParams = Object.keys(queryParams)
     .filter((key) => queryParams[key] !== "")
@@ -164,7 +164,7 @@ export const getTaskHandler = async (req: CustomRequest, res: Response) => {
 
 export const getLabelHandler = async (req: CustomRequest, res: Response) => {
   const queryParams = req?.query;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   const filteredQueryParams = Object.keys(queryParams)
     .filter((key) => queryParams[key] !== "")
@@ -183,7 +183,7 @@ export const getLabelHandler = async (req: CustomRequest, res: Response) => {
 
 export const deleteGroupHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   if (deleteCodec.decode(args)._tag === "Right") {
     try {
@@ -199,7 +199,7 @@ export const deleteGroupHandler = async (req: CustomRequest, res: Response) => {
 
 export const deleteTaskHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   if (deleteCodec.decode(args)._tag === "Right") {
     try {
@@ -247,7 +247,7 @@ export const deleteLabelHandler = async (req: CustomRequest, res: Response) => {
 
 export const updateGroupHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   if (updateGroupCodec.decode(args)._tag === "Right") {
     try {
@@ -263,7 +263,7 @@ export const updateGroupHandler = async (req: CustomRequest, res: Response) => {
 
 export const updateTaskHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   if (updateTaskCodec.decode(args)._tag === "Right") {
     try {
@@ -279,7 +279,7 @@ export const updateTaskHandler = async (req: CustomRequest, res: Response) => {
 
 export const updateSubTaskHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   if (updateSubTaskCodec.decode(args)._tag === "Right") {
     try {
@@ -295,7 +295,7 @@ export const updateSubTaskHandler = async (req: CustomRequest, res: Response) =>
 
 export const updateLabelHandler = async (req: CustomRequest, res: Response) => {
   const args = req?.body;
-  const userId = req.userId;
+  const userId = req?.userId;
 
   if (updateLabelCodec.decode(args)._tag === "Right") {
     try {
