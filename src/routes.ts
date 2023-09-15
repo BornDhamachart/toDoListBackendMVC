@@ -10,6 +10,7 @@ import {
   deleteTaskHandler,
   getLabelHandler,
   getTaskHandler,
+  getUserHandler,
   loginHandler,
   registerHandler,
   updateGroupHandler,
@@ -109,3 +110,10 @@ import {
     },
   ];
 
+  export const ProtectedPermissionAppRoutes = [
+    {
+      path: "/getUser",
+      method: "get",
+      action: getUserHandler,
+    },
+  ]

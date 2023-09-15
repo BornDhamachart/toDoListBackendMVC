@@ -1,7 +1,8 @@
 import express, { Application, Request, Response,NextFunction } from "express";
-import { AppRoutes, ProtectedAppRoutes } from "./routes";
+import { AppRoutes, ProtectedAppRoutes, ProtectedPermissionAppRoutes } from "./routes";
 import cors from "cors";
-import { authenticationApiHandler } from "./toDoListAPI";
+import { authPermission, authToken } from "./toDoListAPI/middleware";
+
 
 const app: Application = express();
 
@@ -13,7 +14,11 @@ AppRoutes.forEach((route) => {
 });
 
 ProtectedAppRoutes.forEach((route) => {
-  app[route.method as keyof Application](route.path, authenticationApiHandler, route.action);
+  app[route.method as keyof Application](route.path, authToken, route.action);
+});
+
+ProtectedPermissionAppRoutes.forEach((route) => {
+  app[route.method as keyof Application](route.path, authToken, authPermission(["Admin"]), route.action);
 });
 
 app.get("/", (req, res) => {

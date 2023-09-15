@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import {
   registerCodec,
   loginCodec,
@@ -31,8 +31,8 @@ import {
   deleteSubTask,
   deleteTask,
   deleteGroup,
+  getUser,
 } from "./toDoList.resolver";
-import { JwtPayload } from "jsonwebtoken";
 
 export const registerHandler = async (req: Request, res: Response) => {
   const args = req?.body;
@@ -71,30 +71,6 @@ export const authenticationHandler = async (req: Request, res: Response) => {
     try {
       const result = await authentication(authHeader);
       res.status(200).json({ status: "ok", result: result });
-    } catch (e) {
-      res.status(401).json({ error: String(e) });
-    }
-  } else {
-    res.status(401).json({ error: "Invalid or missing Authorization header" });
-  }
-};
-
-export const authenticationApiHandler = async (
-  req: CustomRequest,
-  res: Response,
-  next: NextFunction
-) => {
-  const authHeader = req?.headers["authorization"];
-
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    try {
-      const decodedUser = await authentication(authHeader);
-      if (typeof decodedUser === "object" && "userId" in decodedUser) {
-        req.userId = (decodedUser as JwtPayload).userId;
-        next();
-      } else {
-        throw new Error("Invalid user data");
-      }
     } catch (e) {
       res.status(401).json({ error: String(e) });
     }
@@ -178,8 +154,6 @@ export const getTaskHandler = async (req: CustomRequest, res: Response) => {
       return result;
     }, {});
 
-  console.log("filteredQueryParams", filteredQueryParams);
-
   try {
     const result = await getTask(filteredQueryParams, userId);
     res.status(200).json({ status: "ok", result: result });
@@ -198,8 +172,6 @@ export const getLabelHandler = async (req: CustomRequest, res: Response) => {
       result[key] = queryParams[key];
       return result;
     }, {});
-
-  console.log("filteredQueryParams", filteredQueryParams);
 
   try {
     const result = await getLabel(filteredQueryParams, userId);
@@ -336,3 +308,13 @@ export const updateLabelHandler = async (req: CustomRequest, res: Response) => {
     res.status(500).json({ error: "Error invalid codec" });
   }
 };
+
+//ADMIN PERMISSION
+export const getUserHandler = async (req: CustomRequest, res: Response) => {
+    try {
+      const result = await getUser();
+      res.status(200).send(result);
+    } catch (e) {
+      res.status(500).json({ error: String(e) });
+    }
+  }

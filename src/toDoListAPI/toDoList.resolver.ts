@@ -39,7 +39,7 @@ export const login = async (args: ILogin) => {
 
     if (isLogin) {
       const token = jwt.sign(
-        { email: user[0]?.email, fullname: user[0]?.fname, userId: user[0]?.id },
+        { email: user[0]?.email, fullname: user[0]?.fname, userId: user[0]?.id, role: user[0]?.role},
         process.env.SECRET_KEY as string,
         {
           expiresIn: "6hr",
@@ -136,7 +136,6 @@ export const createLabel = async (args: ICreateLabel, userId:number) => {
 
 //READ
 export const getTask = async (filteredQueryParams : any, userId:number) => {
-  console.log("filteredQueryParams",filteredQueryParams)
   try {
      const tasks = await prisma.task.findMany({
       where: {
@@ -169,7 +168,6 @@ export const getTask = async (filteredQueryParams : any, userId:number) => {
 };
 
 export const getLabel = async (filteredQueryParams : any, userId:number) => {
-  console.log("filteredQueryParams",filteredQueryParams)
   try {
      const tasks = await prisma.label.findMany({
       where: {
@@ -309,5 +307,16 @@ export const updateLabel = async (args: IUpdateLabel, userId:number) => {
   } catch (e) {
     console.error(e);
     throw new Error("DeleteSubTask failed");
+  }
+};
+
+//ADMIN PERMISSION
+export const getUser = async () => {
+  try {
+     const users = await prisma.users.findMany();
+    return users;
+  } catch (e) {
+    console.error(e);
+    throw new Error("GetUser failed");
   }
 };

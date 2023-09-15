@@ -4,10 +4,9 @@ datasource db {
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native", "darwin-arm64", "debian-openssl-1.1.x"]
-  output          = "../prisma/client"
-  previewFeatures = ["referentialActions"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64", "debian-openssl-1.1.x"]
+  output        = "../prisma/client"
 }
 model Users {
   id        Int      @id @default(autoincrement())
@@ -15,6 +14,7 @@ model Users {
   password  String
   fname     String
   lname     String
+  role      Role     @default(User)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   groups    Group[]
@@ -74,6 +74,11 @@ enum TaskPriority {
   High
   Medium
   Low
+}
+
+enum Role {
+  Admin
+  User
 }
 
 // model Picture {

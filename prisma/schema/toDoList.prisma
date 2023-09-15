@@ -4,6 +4,7 @@ model Users {
   password  String
   fname     String
   lname     String
+  role      Role     @default(User)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   groups    Group[]
@@ -63,6 +64,11 @@ enum TaskPriority {
   High
   Medium
   Low
+}
+
+enum Role {
+  Admin
+  User
 }
 
 // model Picture {

@@ -17,11 +17,11 @@ exports.$Enums = {}
 
 /**
  * Prisma Client JS version: 5.2.0
- * Query Engine version: 2804dc98259d2ea960602aca6b8e7fdc03c1758f
+ * Query Engine version: e90b936d84779543cbe0e494bc8b9d7337fad8e4
  */
 Prisma.prismaVersion = {
   client: "5.2.0",
-  engine: "2804dc98259d2ea960602aca6b8e7fdc03c1758f"
+  engine: "e90b936d84779543cbe0e494bc8b9d7337fad8e4"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -113,6 +113,7 @@ exports.Prisma.UsersScalarFieldEnum = {
   password: 'password',
   fname: 'fname',
   lname: 'lname',
+  role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -171,6 +172,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.Role = exports.$Enums.Role = {
+  Admin: 'Admin',
+  User: 'User'
+};
+
 exports.TaskPriority = exports.$Enums.TaskPriority = {
   Critical: 'Critical',
   High: 'High',
