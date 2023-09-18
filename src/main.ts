@@ -1,8 +1,7 @@
-import express, { Application, Request, Response,NextFunction } from "express";
+import express, { Application } from "express";
 import { AppRoutes, ProtectedAppRoutes, ProtectedPermissionAppRoutes } from "./routes";
 import cors from "cors";
 import { authPermission, authToken } from "./toDoListAPI/middleware";
-
 
 const app: Application = express();
 
