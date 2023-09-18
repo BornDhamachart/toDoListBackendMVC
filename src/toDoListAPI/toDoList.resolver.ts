@@ -249,7 +249,7 @@ export const updateGroup = async (args: IUpdateGroup, userId:number) => {
     });
   } catch (e) {
     console.error(e);
-    throw new Error("DeleteGroup failed");
+    throw new Error("UpdateGroup failed");
   }
 };
 
@@ -271,7 +271,7 @@ export const updateTask = async (args: IUpdateTask, userId:number) => {
     });
   } catch (e) {
     console.error(e);
-    throw new Error("DeleteTask failed");
+    throw new Error("UpdateTask failed");
   }
 };
 
@@ -289,7 +289,7 @@ export const updateSubTask = async (args: IUpdateSubTask, userId:number) => {
     });
   } catch (e) {
     console.error(e);
-    throw new Error("DeleteSubTask failed");
+    throw new Error("UpdateSubTask failed");
   }
 };
 
@@ -306,7 +306,7 @@ export const updateLabel = async (args: IUpdateLabel, userId:number) => {
     });
   } catch (e) {
     console.error(e);
-    throw new Error("DeleteSubTask failed");
+    throw new Error("UpdateSubTask failed");
   }
 };
 
