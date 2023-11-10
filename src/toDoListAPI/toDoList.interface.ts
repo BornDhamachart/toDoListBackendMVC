@@ -1,7 +1,7 @@
 import * as t from "io-ts";
 import { optional } from "io-ts-extra";
 
-import { Request } from 'express';
+import { Request } from "express";
 
 export interface CustomRequest extends Request {
   userId: number;
@@ -9,11 +9,61 @@ export interface CustomRequest extends Request {
 }
 
 enum TaskPriority {
-  Critical = 'Critical',
-  High = 'High',
-  Medium = 'Medium',
-  Low = 'Low',
+  Critical = "Critical",
+  High = "High",
+  Medium = "Medium",
+  Low = "Low",
 }
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    Register:
+ *      type: object
+ *      required:
+ *        - email
+ *        - password
+ *        - fname
+ *        - lname
+ *      properties:
+ *        email:
+ *          type: string
+ *          default: jane.doe@example.com
+ *        password:
+ *          type: string
+ *          default: stringPassword123
+ *        fname:
+ *          type: string
+ *          default: jane
+ *        lname:
+ *          type: string
+ *          default: doe
+ *    RegisterResponse:
+ *      type: object
+ *      properties:
+ *        status:
+ *          type: string
+ *        result:
+ *          type: object
+ *          properties:
+ *             id:
+ *               type: number
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *             fname:
+ *               type: string
+ *             lname:
+ *               type: string
+ *             role:
+ *               type: string
+ *             createdAt:
+ *               type: string
+ *             updatedAt:
+ *               type: string
+ */
 
 export const registerCodec = t.type({
   email: t.string,
@@ -31,6 +81,43 @@ export const loginCodec = t.type({
 
 export interface ILogin extends t.TypeOf<typeof loginCodec> {}
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    CreateGroup:
+ *      type: object
+ *      required:
+ *        - title
+ *        - description
+ *      properties:
+ *        title:
+ *          type: string
+ *          default: Group1
+ *        description:
+ *          type: string
+ *          default: GroupDescription1
+ *    CreateGroupResponse:
+ *      type: object
+ *      properties:
+ *        status:
+ *          type: string
+ *        result:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: number
+ *            title:
+ *              type: string
+ *            description:
+ *              type: string
+ *            createdAt:
+ *              type: string
+ *            updatedAt:
+ *              type: string
+ *            userId:
+ *              type: number
+ */
 export const createGroupCodec = t.type({
   title: t.string,
   description: t.string,
@@ -52,7 +139,7 @@ export interface ICreateTask extends t.TypeOf<typeof createTaskCodec> {}
 export const createSubTaskCodec = t.type({
   title: t.string,
   description: t.string,
-  taskId: t.number
+  taskId: t.number,
 });
 
 export interface ICreateSubTask extends t.TypeOf<typeof createSubTaskCodec> {}
@@ -82,7 +169,7 @@ export const updateTaskCodec = t.type({
   taskId: t.number,
   title: t.string,
   description: t.string,
-  dueDate:t.string,
+  dueDate: t.string,
   completed: t.string,
   priority: t.keyof(TaskPriority),
   groupId: t.number,

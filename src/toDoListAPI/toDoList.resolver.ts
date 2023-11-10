@@ -9,7 +9,7 @@ export const register = async (args: IRegister) => {
   try {
     const hashPassword = await bcrypt.hash(args.password, Number(process.env.SALT_ROUNDS));
 
-    await prisma.users.create({
+    return await prisma.users.create({
       data: {
         email: args?.email,
         password: hashPassword,
@@ -70,7 +70,7 @@ export const authentication = async (authHeader: string) => {
 //CREATE
 export const createGroup = async (args: ICreateGroup, userId:number) => {
   try {
-    await prisma.group.create({
+    return await prisma.group.create({
       data: {
         title: args?.title,
         description: args?.description,
@@ -86,7 +86,7 @@ export const createGroup = async (args: ICreateGroup, userId:number) => {
 export const createTask = async (args: ICreateTask, userId:number) => {
   const inputDueDate = args?.dueDate === "" ? null : `${args?.dueDate}T00:00:00Z`
   try {
-    await prisma.task.create({
+    return await prisma.task.create({
       data: {
         title: args?.title,
         description: args?.description,
@@ -106,7 +106,7 @@ export const createTask = async (args: ICreateTask, userId:number) => {
 
 export const createSubTask = async (args: ICreateSubTask, userId:number) => {
   try {
-    await prisma.subtask.create({
+    return await prisma.subtask.create({
       data: {
         title: args?.title,
         description: args?.description,
@@ -121,7 +121,7 @@ export const createSubTask = async (args: ICreateSubTask, userId:number) => {
 
 export const createLabel = async (args: ICreateLabel, userId:number) => {
   try {
-    await prisma.label.create({
+    return await prisma.label.create({
       data: {
         name: args?.name,
         color: args?.color,
@@ -137,7 +137,7 @@ export const createLabel = async (args: ICreateLabel, userId:number) => {
 //READ
 export const getTask = async (filteredQueryParams : any, userId:number) => {
   try {
-     const tasks = await prisma.task.findMany({
+    return await prisma.task.findMany({
       where: {
         title: {
           contains: filteredQueryParams?.title,
@@ -160,7 +160,6 @@ export const getTask = async (filteredQueryParams : any, userId:number) => {
         group : true
       }
     });
-    return tasks;
   } catch (e) {
     console.error(e);
     throw new Error("GetTask failed");
@@ -169,12 +168,12 @@ export const getTask = async (filteredQueryParams : any, userId:number) => {
 
 export const getLabel = async (filteredQueryParams : any, userId:number) => {
   try {
-     const tasks = await prisma.label.findMany({
+    return await prisma.label.findMany({
       where: {
         userId : userId
       },
     });
-    return tasks;
+
   } catch (e) {
     console.error(e);
     throw new Error("GetTask failed");
@@ -184,7 +183,7 @@ export const getLabel = async (filteredQueryParams : any, userId:number) => {
 //DELETE
 export const deleteGroup = async (args: IDelete, userId:number) => {
   try {
-    await prisma.group.delete({
+    return await prisma.group.delete({
       where: {
         id: args?.id,
       },
@@ -197,7 +196,7 @@ export const deleteGroup = async (args: IDelete, userId:number) => {
 
 export const deleteTask = async (args: IDelete, userId:number) => {
   try {
-    await prisma.task.delete({
+    return await prisma.task.delete({
       where: {
         id: args?.id,
       },
@@ -210,7 +209,7 @@ export const deleteTask = async (args: IDelete, userId:number) => {
 
 export const deleteSubTask = async (args: IDelete, userId:number) => {
   try {
-    await prisma.subtask.delete({
+    return await prisma.subtask.delete({
       where: {
         id: args?.id,
       },
@@ -223,7 +222,7 @@ export const deleteSubTask = async (args: IDelete, userId:number) => {
 
 export const deleteLabel = async (args: IDelete, userId:number) => {
   try {
-    await prisma.label.delete({
+    return await prisma.label.delete({
       where: {
         id: args?.id,
       },
@@ -238,7 +237,7 @@ export const deleteLabel = async (args: IDelete, userId:number) => {
 //UPDATE
 export const updateGroup = async (args: IUpdateGroup, userId:number) => {
   try {
-    await prisma.group.update({
+    return await prisma.group.update({
       where: {
         id: args?.groupId,
       },
@@ -256,7 +255,7 @@ export const updateGroup = async (args: IUpdateGroup, userId:number) => {
 export const updateTask = async (args: IUpdateTask, userId:number) => {
   const inputDueDate = args?.dueDate === "" ? null : `${args?.dueDate}T00:00:00Z`
   try {
-    await prisma.task.update({
+    return await prisma.task.update({
       where: {
         id: args?.taskId,
       },
@@ -277,7 +276,7 @@ export const updateTask = async (args: IUpdateTask, userId:number) => {
 
 export const updateSubTask = async (args: IUpdateSubTask, userId:number) => {
   try {
-    await prisma.subtask.update({
+    return await prisma.subtask.update({
       where: {
         id: args?.subTaskId,
       },
@@ -295,7 +294,7 @@ export const updateSubTask = async (args: IUpdateSubTask, userId:number) => {
 
 export const updateLabel = async (args: IUpdateLabel, userId:number) => {
   try {
-    await prisma.label.update({
+    return await prisma.label.update({
       where: {
         id: args?.labelId,
       },

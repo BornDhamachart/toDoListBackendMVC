@@ -34,13 +34,18 @@ import {
   getUser,
 } from "./toDoList.resolver";
 
+export const healthCheckHandler = async (req: Request, res: Response) => {
+  res.status(200).json({ status: "ok" });
+};
+
 export const registerHandler = async (req: Request, res: Response) => {
   const args = req?.body;
 
   if (registerCodec.decode(args)._tag === "Right") {
     try {
       const result = await register(args);
-      res.status(200).json({ status: "ok" });
+      console.log("tetest", result);
+      res.status(200).json({ status: "ok" ,result: result});
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -86,7 +91,7 @@ export const createGroupHandler = async (req: CustomRequest, res: Response) => {
   if (createGroupCodec.decode(args)._tag === "Right") {
     try {
       const result = await createGroup(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -102,7 +107,7 @@ export const createTaskHandler = async (req: CustomRequest, res: Response) => {
   if (createTaskCodec.decode(args)._tag === "Right") {
     try {
       const result = await createTask(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -111,14 +116,17 @@ export const createTaskHandler = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const createSubTaskHandler = async (req: CustomRequest, res: Response) => {
+export const createSubTaskHandler = async (
+  req: CustomRequest,
+  res: Response
+) => {
   const args = req?.body;
   const userId = req.userId;
 
   if (createSubTaskCodec.decode(args)._tag === "Right") {
     try {
       const result = await createSubTask(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -134,7 +142,7 @@ export const createLabelHandler = async (req: CustomRequest, res: Response) => {
   if (createLabelCodec.decode(args)._tag === "Right") {
     try {
       const result = await createLabel(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -188,7 +196,7 @@ export const deleteGroupHandler = async (req: CustomRequest, res: Response) => {
   if (deleteCodec.decode(args)._tag === "Right") {
     try {
       const result = await deleteGroup(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -204,7 +212,7 @@ export const deleteTaskHandler = async (req: CustomRequest, res: Response) => {
   if (deleteCodec.decode(args)._tag === "Right") {
     try {
       const result = await deleteTask(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -213,14 +221,17 @@ export const deleteTaskHandler = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const deleteSubTaskHandler = async (req: CustomRequest, res: Response) => {
+export const deleteSubTaskHandler = async (
+  req: CustomRequest,
+  res: Response
+) => {
   const args = req?.body;
   const userId = req.userId;
 
   if (deleteCodec.decode(args)._tag === "Right") {
     try {
       const result = await deleteSubTask(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -236,7 +247,7 @@ export const deleteLabelHandler = async (req: CustomRequest, res: Response) => {
   if (deleteCodec.decode(args)._tag === "Right") {
     try {
       const result = await deleteLabel(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -252,7 +263,7 @@ export const updateGroupHandler = async (req: CustomRequest, res: Response) => {
   if (updateGroupCodec.decode(args)._tag === "Right") {
     try {
       const result = await updateGroup(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -268,7 +279,7 @@ export const updateTaskHandler = async (req: CustomRequest, res: Response) => {
   if (updateTaskCodec.decode(args)._tag === "Right") {
     try {
       const result = await updateTask(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -277,14 +288,17 @@ export const updateTaskHandler = async (req: CustomRequest, res: Response) => {
   }
 };
 
-export const updateSubTaskHandler = async (req: CustomRequest, res: Response) => {
+export const updateSubTaskHandler = async (
+  req: CustomRequest,
+  res: Response
+) => {
   const args = req?.body;
   const userId = req?.userId;
 
   if (updateSubTaskCodec.decode(args)._tag === "Right") {
     try {
       const result = await updateSubTask(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -300,7 +314,7 @@ export const updateLabelHandler = async (req: CustomRequest, res: Response) => {
   if (updateLabelCodec.decode(args)._tag === "Right") {
     try {
       const result = await updateLabel(args, userId);
-      res.status(200).json({ status: "ok" });
+      res.status(200).json({ status: "ok", result: result });
     } catch (e) {
       res.status(500).json({ error: String(e) });
     }
@@ -311,10 +325,10 @@ export const updateLabelHandler = async (req: CustomRequest, res: Response) => {
 
 //ADMIN PERMISSION
 export const getUserHandler = async (req: CustomRequest, res: Response) => {
-    try {
-      const result = await getUser();
-      res.status(200).send(result);
-    } catch (e) {
-      res.status(500).json({ error: String(e) });
-    }
+  try {
+    const result = await getUser();
+    res.status(200).send(result);
+  } catch (e) {
+    res.status(500).json({ error: String(e) });
   }
+};
