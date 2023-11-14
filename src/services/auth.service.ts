@@ -7,6 +7,16 @@ export const prisma = new PrismaClient();
 
 export const register = async (args: IRegister) => {
   try {
+    const user = await prisma.users.findMany({
+      where: {
+        email: args?.email,
+      },
+    });
+
+    if (user?.length > 0) {
+      throw new Error("User already exist!");
+    }
+
     const hashPassword = await bcrypt.hash(args.password, Number(process.env.SALT_ROUNDS));
 
     return await prisma.users.create({
